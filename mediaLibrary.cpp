@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class mediaLibrary {
+class MediaLibrary {
     private:
 
     public:

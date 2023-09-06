@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class navigationSystem {
+class NavigationSystem {
     private:
 
     public:

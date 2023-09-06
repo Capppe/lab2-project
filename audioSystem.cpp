@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class audioSystem {
+class AudioSystem {
     private:
         int currentVolume;
         string currentSong;
@@ -11,7 +11,7 @@ class audioSystem {
 
     public:
     //constructor
-    audioSystem(string source) {
+    AudioSystem(string source) {
 
     }
     //getters

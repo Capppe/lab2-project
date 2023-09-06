@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class externalInterfaces {
+class ExternalInterfaces {
     private:
 
     public:

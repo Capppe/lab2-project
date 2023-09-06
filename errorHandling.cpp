@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class errorHandling {
+class ErrorHandling {
     private:
 
     public:

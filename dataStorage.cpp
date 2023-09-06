@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class dataStorage {
+class DataStorage {
     private:
 
     public:

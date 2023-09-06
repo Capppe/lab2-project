@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class internetConnectivity {
+class InternetConnectivity {
     private:
         string connectionStatus;
 

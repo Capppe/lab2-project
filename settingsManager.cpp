@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class settingsManager {
+class SettingsManager {
     private:
 
     public:

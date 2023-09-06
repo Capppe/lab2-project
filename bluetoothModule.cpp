@@ -3,13 +3,13 @@
 
 using namespace std;
 
-class bluetoothModule {
+class BluetoothModule {
     private:
         string connectionStatus;
 
     public:
     //constructor
-        bluetoothModule() {
+        BluetoothModule() {
 
         }
         //getters
