@@ -1,13 +1,9 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <iostream>
-#include <string>
 #include <QToolBar>
 #include <QMainWindow>
 #include <QtWidgets>
-#include "../ui_test.h"
-#include "toolBar.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -17,11 +13,15 @@ public:
     //Constructor
     MainWindow(QWidget *parent = nullptr);
 
+    static MainWindow *getMainWindow();
+    void setupMainMenu();
+
 private:
-//Member functions
-    
-//Member variables 
-    Ui::MainWindow ui;
+    void setupToolBar();
+    void setupStatusBar();
+
+    static MainWindow *mainWindow;
+    QWidget *mainWidget;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

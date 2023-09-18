@@ -27,12 +27,13 @@
         <widget class="QPushButton" name="drawer_bt_button">
          <property name="minimumSize">
           <size>
-           <width>60</width>
-           <height>60</height>
+           <width>58</width>
+           <height>58</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton { border-color: white;  border-width: 1px; border-style: solid;border-radius: 30px;}</string>
+          <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
          </property>
          <property name="text">
           <string>PushButton</string>
@@ -43,12 +44,13 @@
         <widget class="QPushButton" name="drawer_wifi_button">
          <property name="minimumSize">
           <size>
-           <width>60</width>
-           <height>60</height>
+           <width>58</width>
+           <height>58</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton { border-color: white;  border-width: 1px; border-style: solid;border-radius: 30px;}</string>
+          <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
          </property>
          <property name="text">
           <string>PushButton</string>
@@ -59,12 +61,13 @@
         <widget class="QPushButton" name="drawer_settings_button">
          <property name="minimumSize">
           <size>
-           <width>60</width>
-           <height>60</height>
+           <width>58</width>
+           <height>58</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">QPushButton { border-color: white;  border-width: 1px; border-style: solid;border-radius: 30px;}</string>
+          <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
          </property>
          <property name="text">
           <string>PushButton</string>

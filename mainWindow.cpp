@@ -1,15 +1,20 @@
 #include "headers/mainWindow.hpp"
+#include "headers/buttonHandler.hpp"
+#include "headers/toolBar.hpp"
+#include "headers/statusBar.hpp"
+#include "headers/mainMenu.hpp"
 
-// Constructor
+MainWindow *MainWindow::mainWindow = nullptr;
+
 MainWindow::MainWindow(QWidget *parent) 
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
-    QToolBar *mainToolBar = addToolBar("");
-    ToolBar *toolBar = new ToolBar(mainToolBar);
-    toolBar->constructToolBarMenu(new QWidget(this), this->width());
-
-    mainToolBar->addWidget(toolBar);
+    qDebug() << "MainWindow!!"; 
+        qDebug() << "Creating toolbar";
+    this->setupToolBar();
+        qDebug() << "Creating statusbar";
+    this->setupStatusBar();
+    this->setupMainMenu();
 
     this->setStyleSheet(
         "QMainWindow{background-color: gray; border: none;} \
@@ -17,6 +22,43 @@ MainWindow::MainWindow(QWidget *parent)
         QPushButton:hover {border: 1px solid #f49609; color: #f49609} \
         QToolBar{background-color: black; border: none;}"
     );
+    mainWindow = this;
+}
+
+void MainWindow::setupMainMenu() {
+    qDebug() << "Creating mainmenu";
+    MainMenu *mainMenu = new MainMenu(this);
+    mainMenu->bindButtons();
+    this->setCentralWidget(mainMenu);
+    qDebug() << "Created mainmenu!";
+}
+
+void MainWindow::setupToolBar() {
+    QToolBar *mainToolBar = new QToolBar;
+    addToolBar(Qt::TopToolBarArea, mainToolBar);
+    ToolBar *toolBar = new ToolBar(mainToolBar);
+    toolBar->constructToolBar();
+    toolBar->constructToolBarMenu(new QWidget(this), this->width());
+
+    mainToolBar->addWidget(toolBar);
+}
+
+void MainWindow::setupStatusBar() {
+    QToolBar *mainStatusBar = new QToolBar;
+    addToolBar(Qt::BottomToolBarArea, mainStatusBar);
+    StatusBar *statusBar = new StatusBar(mainStatusBar);
+    statusBar->constructStatusBar();
+    statusBar->bindButtons();
+
+    mainStatusBar->addWidget(statusBar);
+}
+
+void showMenu() {
+
+}
+
+MainWindow *MainWindow::getMainWindow(){
+    return mainWindow;
 }
 
 // Adds a gradient background

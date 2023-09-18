@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StatusBar</class>
+ <widget class="QWidget" name="StatusBar">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>935</width>
+    <height>80</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>StatusBar</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	background-color: black;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>784</width>
+     <height>62</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMinAndMaxSize</enum>
+    </property>
+    <item>
+     <widget class="QPushButton" name="homeButton">
+      <property name="minimumSize">
+       <size>
+        <width>58</width>
+        <height>58</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string>QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="volButton">
+        <property name="minimumSize">
+         <size>
+          <width>58</width>
+          <height>58</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string>QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="volDownButton">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 20px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="volUpButton">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 20px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>110</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="tbd1">
+      <property name="minimumSize">
+       <size>
+        <width>58</width>
+        <height>58</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="tbd2">
+      <property name="minimumSize">
+       <size>
+        <width>58</width>
+        <height>58</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="settingsButton">
+      <property name="minimumSize">
+       <size>
+        <width>58</width>
+        <height>58</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {border: 1px white; border-width: 1px; border-style: solid;border-radius: 29px;}
+QPushButton:hover { border: 1px solid #f49609; color: #f49609;}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
