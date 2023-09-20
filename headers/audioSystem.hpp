@@ -2,10 +2,12 @@
 #define AUDIOSYSTEM_HPP
 
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include <QDir>
 #include <QMediaMetaData>
 #include <QList>
 #include <QDebug>
+#include <QQueue>
 #include "musicInterface.hpp"
 
 class AudioSystem 
@@ -18,6 +20,7 @@ public:
     void setPositionByUser();
 
     // Misc functionality
+    static void constructQueue(const QModelIndex &index);
     void bindSignals();
     void updateUi();
     void browseLocalFiles();
@@ -39,10 +42,14 @@ private:
     ~AudioSystem();
 
     void updatePlayPauseButton();
+    static QUrl getLocalSongUrl(const QModelIndex &index);
+
+    static QMediaPlaylist *playlist;
 
     QStandardItemModel *addToModel(QStringList fileList, QDir folder);
     QMetaObject::Connection connSongPos;
     QMetaObject::Connection connUiUpdater;
+    static QStandardItemModel *model;
     static QMediaPlayer *player;
     static MusicInterface *musicInterface;
     static AudioSystem *instance;

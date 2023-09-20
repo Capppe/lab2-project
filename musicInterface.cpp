@@ -37,6 +37,7 @@ void MusicInterface::bindButtons() {
     QObject::connect(this->songLengthSlider, &QSlider::sliderReleased, buttonHandler, &ButtonHandler::sliderChanged);
     QObject::connect(this->nextSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::skip);
     QObject::connect(this->prevSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::rewind);
+    QObject::connect(this->shuffleSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::shuffle);
 }
 // Ui
 void MusicInterface::initVars() {
@@ -170,11 +171,6 @@ void MusicInterface::styleLayout() {
     treeView->setRootIsDecorated(false);
 }
 
-QTreeView *MusicInterface::browseLocalFiles() {
-    QScroller::grabGesture(treeView->viewport(), QScroller::ScrollerGestureType::LeftMouseButtonGesture);
-    QScroller::scroller(treeView->viewport())->setScrollerProperties(scrollerProperties);
-}
-
 void MusicInterface::toggleView(){
     stackedWidget->setCurrentIndex(stackedWidget->currentIndex() == 0 ? 1 : 0);
 }
@@ -227,8 +223,8 @@ void MusicInterface::setSongSliderDuration(qint64 dur){
 }
 
 void MusicInterface::setItemPressed(){
-    QObject::connect(this->treeView->selectionModel(), &QItemSelectionModel::selectionChanged, [&](const QItemSelection &selected, const QItemSelection &deselected){
-        AudioSystem::getInstance()->parseLocalFile(selected, deselected);
+    QObject::connect(treeView, &QTreeView::clicked, this, [&](const QModelIndex &index){
+        AudioSystem::constructQueue(index);
     });
 }
 

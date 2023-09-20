@@ -4,11 +4,15 @@
 AudioSystem *AudioSystem::instance = nullptr;
 MusicInterface *AudioSystem::musicInterface = nullptr;
 QMediaPlayer *AudioSystem::player = nullptr;
+QMediaPlaylist *AudioSystem::playlist = nullptr;
+QStandardItemModel *AudioSystem::model = nullptr;
 
 AudioSystem::AudioSystem() 
 {
     qDebug() << "AudioSys created!";
     player = new QMediaPlayer;
+    playlist = new QMediaPlaylist;
+
     player->setVolume(10); //DEBUGGING TO NOT GET BLASTED
 }
 AudioSystem::~AudioSystem() 
@@ -20,9 +24,13 @@ void AudioSystem::bindSignals() {
     if(!player){
         player = new QMediaPlayer;
     }
-    connSongPos = QObject::connect(player, &QMediaPlayer::mediaStatusChanged, [&]() {
+    connSongPos = QObject::connect(player, &QMediaPlayer::mediaStatusChanged, [&](QMediaPlayer::MediaStatus status) {
         updateUi();
-        player->play();
+        if(status == QMediaPlayer::EndOfMedia){
+            qDebug() << "End of media!";
+            playlist->next();
+            player->play();
+        }
     });
     connUiUpdater = QObject::connect(player, &QMediaPlayer::positionChanged, [&](qint64 pos) {
         MusicInterface::updateSongPosition(pos);
@@ -31,7 +39,6 @@ void AudioSystem::bindSignals() {
 
 // Ui updates
 void AudioSystem::updateUi() {
-    qDebug() << "Update called";
     if(player->state() == QMediaPlayer::PlayingState || player->state() == QMediaPlayer::PausedState){
         QVariant songName = player->metaData(QMediaMetaData::Title);
         QVariant artistName = player->metaData(QMediaMetaData::AlbumArtist);
@@ -58,33 +65,61 @@ void AudioSystem::playPause(){
         player->pause();
     }else if(player->state() == QMediaPlayer::PausedState){
         player->play();
-    }else {
-        qDebug() << "Do something?";
+    }else{
+        qDebug() << "Do something";
     }
     updatePlayPauseButton();
 }
 
 void AudioSystem::skipButton(){
-    
+    playlist->next();
+    player->play();
 }
 
 void AudioSystem::rewindButton(){
-    int currPos = player->position() * 1000;
-    if(currPos/5 > 5){
+    if(player->position() > 4000){
         player->setPosition(0);
     }else {
-        qDebug() << "No";
+        playlist->previous();
+        player->play();
     }
 }
 
+// Local music playing fuctionality
+void AudioSystem::constructQueue(const QModelIndex &index){
+    for (int row = index.row(); row < model->rowCount(); ++row) {
+        QModelIndex nextSongIndex = index.siblingAtColumn(0).siblingAtRow(row);
+        playlist->addMedia((getLocalSongUrl(nextSongIndex)));
+        qDebug() << "Enqueued song: " << index.siblingAtColumn(0).siblingAtRow(row).data(Qt::DisplayRole).toString();
+    }
+    playlist->setPlaybackMode(QMediaPlaylist::Sequential);
+    player->setPlaylist(playlist);
+    player->play();
+}
+
+QUrl AudioSystem::getLocalSongUrl(const QModelIndex &index){
+    QString songName;
+    if(index.column() > 0){
+        songName = index.siblingAtColumn(0).data(Qt::DisplayRole).toString();
+    }else{
+        songName = index.data(Qt::DisplayRole).toString();
+    }
+
+    QUrl songUrl = QUrl::fromLocalFile(QDir::currentPath() + "/local/audioFiles/" + songName);
+
+    if(!songUrl.isValid()){
+        return QUrl();
+    }
+    return songUrl;
+}
+
 void AudioSystem::browseLocalFiles() {
-    //musicInterface->toggleView();
     QTreeView *treeView = musicInterface->getTreeView();
     QDir folder(QDir::currentPath() + "/local/audioFiles");
     QStringList filters;
     filters << "*.mp3";
     QStringList fileList = folder.entryList(filters, QDir::Files);
-    QStandardItemModel *model = addToModel(fileList, folder);
+    model = addToModel(fileList, folder);
 
     model->setColumnCount(4);
     model->setHorizontalHeaderLabels({"Track", "Artist", "Album", "Length"});
@@ -97,17 +132,11 @@ void AudioSystem::browseLocalFiles() {
     musicInterface->setTreeView(treeView);
     musicInterface->setItemPressed();
     musicInterface->toggleView();
-    
-    //QString url = QDir::currentPath() + path;
-    //player->setMedia(QUrl::fromLocalFile(url));
-    //player->setVolume(30); //testing only
-    //player->play();
 }
+
 
 void AudioSystem::parseLocalFile(const QItemSelection &selected, const QItemSelection &deselected){
     Q_UNUSED(deselected)
-
-    qDebug() << "Parsing";
 
     QString selection = selected.indexes().at(0).data().toString();
     QDir folder(QDir::currentPath() + "/local/audioFiles");
@@ -115,22 +144,29 @@ void AudioSystem::parseLocalFile(const QItemSelection &selected, const QItemSele
     QStringList fileList = folder.entryList(filters, QDir::Files);
     QString fileName = folder.filePath(fileList[0]);
     setMedia(fileName);
-    qDebug() << "FileName: " << fileName;
 }
+
 
 QStandardItemModel *AudioSystem::addToModel(QStringList fileList, QDir folder){
     QStandardItemModel *model = new QStandardItemModel;
     QMediaPlayer *mediaPlayer = new QMediaPlayer;
-        qDebug() << "Filelist: " << fileList;
     for (int i = 0; i < fileList.size(); ++i) {
         QString fileName = folder.filePath(fileList[i]);
         mediaPlayer->setMedia(QUrl::fromLocalFile(fileName));
         //TODO add mediaplayer connection (onStateChanged...)? 
         QList<QStandardItem*> rowItems;
-        rowItems << new QStandardItem(fileList[i])
-                 << new QStandardItem(mediaPlayer->metaData(QMediaMetaData::ContributingArtist).toString())
-                 << new QStandardItem(mediaPlayer->metaData(QMediaMetaData::AlbumTitle).toString())
-                 << new QStandardItem(QString::number(mediaPlayer->duration() / 1000) + "s");
+        QStandardItem *songName = new QStandardItem(fileList[i]);
+        QStandardItem *artistName = new QStandardItem(mediaPlayer->metaData(QMediaMetaData::ContributingArtist).toString());
+        QStandardItem *albumName = new QStandardItem(mediaPlayer->metaData(QMediaMetaData::AlbumTitle).toString());
+        QStandardItem *songLength = new QStandardItem(QString::number(mediaPlayer->duration() / 1000) + "s");
+
+        songName->setData(fileList[i], Qt::DisplayRole);
+        artistName->setData(mediaPlayer->metaData(QMediaMetaData::ContributingArtist).toString(), Qt::DisplayRole);
+        albumName->setData(mediaPlayer->metaData(QMediaMetaData::AlbumTitle).toString(), Qt::DisplayRole);
+        songLength->setData(QString::number(mediaPlayer->duration() / 1000) + "s", Qt::DisplayRole);
+
+
+        rowItems << songName << artistName << albumName << songLength;
 
         for (QStandardItem *item : rowItems){
             item->setFont(QFont("Roboto Mono", 16));
@@ -142,15 +178,17 @@ QStandardItemModel *AudioSystem::addToModel(QStringList fileList, QDir folder){
     return model;
 }
 
+
+// Setters
 void AudioSystem::setPositionByUser() {
     qint64 pos = MusicInterface::getSliderPosition();
     MusicInterface::updateSongPosition(pos);
     player->setPosition(pos);
 }
 
-// Setters
 void AudioSystem::setMedia(QString path){
     qDebug() << "Playing? Path= " << path;
+    player->stop();
     player->setMedia(QUrl::fromLocalFile(path));
     player->play();
 }

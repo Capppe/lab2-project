@@ -89,7 +89,7 @@ void ButtonHandler::rewind() {
 }
 
 void ButtonHandler::skip() {
-
+    AudioSystem::getInstance()->skipButton();
 }
 
 void ButtonHandler::shuffle() {
