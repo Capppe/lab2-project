@@ -1,5 +1,7 @@
 #include "headers/toolBar.hpp"
 
+QLabel *ToolBar::navMenu = nullptr;
+
 ToolBar::ToolBar(QToolBar *toolBar) {
     this->toolBar = toolBar;
 }
@@ -89,5 +91,5 @@ void ToolBar::settingsButtonPressed() {
 }
 //Setters
 void ToolBar::setNavMenuTxt(std::string txt){
-    this->navMenu->setText(QString::fromStdString(txt));
+    navMenu->setText(QString::fromStdString(txt));
 }

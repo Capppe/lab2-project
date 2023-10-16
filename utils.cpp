@@ -7,3 +7,16 @@ QString Utils::getTimeFormat(qint64 milliseconds) {
     time = time.addMSecs(milliseconds);
     return time.toString();
 }
+
+QList<QPair<QString, QString>> Utils::parseFileContent(QList<QString> content){
+    QList<QPair<QString, QString>> contentList;
+
+    for(const QString &c : content){
+        QStringList stringList = c.split(",");
+        QPair<QString, QString> newContent(stringList[0], stringList[1]);
+
+        contentList.append(newContent);
+    }
+
+    return contentList;
+}

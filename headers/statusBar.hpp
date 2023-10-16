@@ -2,7 +2,10 @@
 #define STATUSBAR_HPP
 
 #include <QToolBar>
+#include <QProcess>
+#include <QString>
 #include <QDebug>
+
 #include "../uic/ui_statusBar.h"
 
 class StatusBar : public QWidget
@@ -32,6 +35,11 @@ private:
     QWidget *spacerWidget;
 
     void createButtons();
+    int getCurrentVolume();
+
+private slots:
+    void onVolumeUpClicked();
+    void onVolumeDownClicked();
 };
 
 #endif

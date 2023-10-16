@@ -11,6 +11,7 @@ void StatusBar::constructStatusBar(){
     statusBar->setMinimumHeight(64);
     statusBar->setMovable(false);
     this->createButtons();
+    this->getCurrentVolume();
 }
 
 void StatusBar::createButtons(){
@@ -57,9 +58,9 @@ void StatusBar::createButtons(){
     volDownButton->setMinimumSize(QSize(40,40));
 
     volControlLayout->addWidget(volButton);
-    volControlLayout->addWidget(volUpButton);
-    volControlLayout->addWidget(volSlider);
     volControlLayout->addWidget(volDownButton);
+    volControlLayout->addWidget(volSlider);
+    volControlLayout->addWidget(volUpButton);
     volControlWidget->setLayout(volControlLayout);
 
     buttonLayout->addWidget(powerButton);
@@ -70,6 +71,8 @@ void StatusBar::createButtons(){
     barLayout->setSpacing(30);
     buttonLayout->setSpacing(60);
 
+    volSlider->setValue(this->getCurrentVolume());
+
     QWidgetList widgetList = {homeButton, volControlWidget, spacerWidget, buttonWidget};
     for(QWidget *widget : widgetList){
         barLayout->addWidget(widget);
@@ -79,4 +82,34 @@ void StatusBar::createButtons(){
 void StatusBar::bindButtons() {
     ButtonHandler *buttonHandler = ButtonHandler::getInstance();
     connect(homeButton, &QPushButton::clicked, buttonHandler, &ButtonHandler::homeButton);
+    connect(volUpButton, &QPushButton::clicked, this, &StatusBar::onVolumeUpClicked);
+    connect(volDownButton, &QPushButton::clicked, this, &StatusBar::onVolumeDownClicked);
+}
+
+void StatusBar::onVolumeUpClicked(){
+    int currentVolume = volSlider->value();
+    if(currentVolume < 100 && currentVolume + 10 <= 100){
+        volSlider->setValue(currentVolume + 10);
+        QProcess::execute("pactl set-sink-volume @DEFAULT_SINK@ +10%");
+    }else{
+        volSlider->setValue(100);
+        QProcess::execute("pactl set-sink-volume @DEFAULT_SINK@ 100%");
+    }
+}
+
+void StatusBar::onVolumeDownClicked(){
+    int currentVolume = volSlider->value();
+    if(currentVolume > 0){
+        volSlider->setValue(currentVolume - 10);
+        QProcess::execute("pactl set-sink-volume @DEFAULT_SINK@ -10%");
+    }
+}
+
+int StatusBar::getCurrentVolume(){
+    QProcess *process = new QProcess();
+    process->start("sh", QStringList() << "-c" << "pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}'");
+    process->waitForFinished();
+    QString output = process->readAllStandardOutput();
+    qDebug() << "Output: "<<output.trimmed().toInt();
+    return output.trimmed().remove("%").toInt();
 }

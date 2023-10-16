@@ -12,6 +12,10 @@ public:
 public slots:
     // Main menu
     void musicButton();
+    void bluetoothButton();
+    void navigationButton();
+    void radioButton();
+    void applicationsButton();
 
     // ToolBar
     void homeButton();

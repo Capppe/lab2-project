@@ -19,7 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setStyleSheet(
         "QMainWindow{background-color: gray; border: none;} \
         QPushButton{background-color: black; color: white; border-radius: 5px;} \
-        QPushButton:hover {border: 1px solid #f49609; color: #f49609} \
+        #mainMenuButton{ background-color: black; border-radius: 5px; } \
+        #buttonLabel{ color:white; font: 22px; } \
+        #buttonIcon{ color:white; font: 26px; } \
+        QPushButton:hover, CustomButton:hover{border: 1px solid #f49609; color: #f49609} \
         QToolBar{background-color: black; border: none;}"
     );
     mainWindow = this;
@@ -28,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::setupMainMenu() {
     qDebug() << "Creating mainmenu";
     MainMenu *mainMenu = new MainMenu(this);
-    mainMenu->bindButtons();
     this->setCentralWidget(mainMenu);
     qDebug() << "Created mainmenu!";
 }

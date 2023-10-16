@@ -1,16 +1,9 @@
-#include <iostream>
-#include <string>
+#include "headers/navigationSystem.hpp"
 
-using namespace std;
+NavigationSystem::NavigationSystem()
+{
 
-class NavigationSystem {
-    private:
+}
 
-    public:
-        //getters
-        
-        //setters
+NavigationSystem::~NavigationSystem() {}
 
-        //functionality
-
-};

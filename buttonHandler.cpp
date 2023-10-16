@@ -1,9 +1,15 @@
 #include "headers/buttonHandler.hpp"
+#include "headers/toolBar.hpp"
 #include <QCoreApplication>
 #include "headers/mainWindow.hpp"
 #include "headers/musicInterface.hpp"
 #include "headers/mainMenu.hpp"
 #include "headers/audioSystem.hpp"
+#include "headers/bluetoothInterface.hpp"
+#include "headers/appsInterface.hpp"
+#include "headers/navigationInterface.hpp"
+#include "headers/radioInterface.hpp"
+#include "headers/APIhandler.hpp"
 
 ButtonHandler *ButtonHandler::instance = nullptr;
 
@@ -32,6 +38,44 @@ void ButtonHandler::musicButton() {
         mainWindow->setCentralWidget(AudioSystem::getMusicInterface());
         as->updateUi();
         as->bindSignals();
+        ToolBar::setNavMenuTxt("Music");
+    }
+}
+
+void ButtonHandler::bluetoothButton() {
+    MainWindow *mainWindow = MainWindow::getMainWindow();
+    BluetoothInterface *btInterface = new BluetoothInterface();
+    if(mainWindow) {
+        mainWindow->setCentralWidget(btInterface);
+        ToolBar::setNavMenuTxt("Bluetooth");
+    }
+}
+
+void ButtonHandler::navigationButton() {
+    MainWindow *mainWindow = MainWindow::getMainWindow();
+    NavigationInterface *navIface = new NavigationInterface();
+    if(mainWindow) {
+        mainWindow->setCentralWidget(navIface);
+        ToolBar::setNavMenuTxt("Navigation");
+    }
+}
+
+void ButtonHandler::radioButton() {
+    MainWindow *mainWindow = MainWindow::getMainWindow();
+    RadioInterface *radioIface = new RadioInterface();
+    if(mainWindow) {
+        mainWindow->setCentralWidget(radioIface);
+        ToolBar::setNavMenuTxt("Radio");
+    }
+}
+
+void ButtonHandler::applicationsButton() {
+    MainWindow *mainWindow = MainWindow::getMainWindow();
+    Applications *apps = new Applications();
+    if(mainWindow) {
+        mainWindow->setCentralWidget(apps);
+        ToolBar::setNavMenuTxt("Applications");
+
     }
 }
 
@@ -41,6 +85,7 @@ void ButtonHandler::homeButton() {
     MainWindow *mainWindow = MainWindow::getMainWindow();
     if(mainWindow) {
         mainWindow->setupMainMenu();
+        ToolBar::setNavMenuTxt("Home");
     }
 }
 
@@ -93,5 +138,5 @@ void ButtonHandler::skip() {
 }
 
 void ButtonHandler::shuffle() {
-    
+    AudioSystem::getInstance()->shuffleButton();
 }

@@ -1,0 +1,13 @@
+name = YouTube
+icon = ../../icons/youtube.png
+exec = /usr/bin/firefox www.youtube.com
+
+name = Netflix
+icon = /home/cappe/School/Lab2/CarHeadUnit/icons/netflix.png
+exec = /usr/bin/firefox www.netflix.com
+
+name = Firefox
+icon = 
+exec = /usr/bin/firefox
+
+END - LEAVE THIS HERE

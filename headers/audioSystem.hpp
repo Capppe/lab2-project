@@ -1,22 +1,31 @@
 #ifndef AUDIOSYSTEM_HPP
 #define AUDIOSYSTEM_HPP
 
-#include <QMediaPlayer>
+#include <QRandomGenerator>
 #include <QMediaPlaylist>
-#include <QDir>
 #include <QMediaMetaData>
-#include <QList>
+#include <QMediaPlayer>
+#include <QString>
 #include <QDebug>
 #include <QQueue>
+#include <QList>
+#include <QDir>
+
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
+
 #include "musicInterface.hpp"
+#include "bluetooth.hpp"
 
 class AudioSystem 
 {
 public:
     // Music control
+    void stop();
     void playPause();
     void skipButton();
     void rewindButton();
+    void shuffleButton();
     void setPositionByUser();
 
     // Misc functionality
@@ -34,7 +43,7 @@ public:
     QMetaObject::Connection getConnUiUpdater();
 
     // Setters
-    static void setMedia(QString path);
+    void setMedia(QString path);
 
 private:
     // Constructor & destructor
@@ -42,17 +51,23 @@ private:
     ~AudioSystem();
 
     void updatePlayPauseButton();
+    void createModel();
+    void checkSource();
+    void updateBtUi();
     static QUrl getLocalSongUrl(const QModelIndex &index);
 
-    static QMediaPlaylist *playlist;
-
+    QTreeView *treeView;
     QStandardItemModel *addToModel(QStringList fileList, QDir folder);
     QMetaObject::Connection connSongPos;
     QMetaObject::Connection connUiUpdater;
+    Bluetooth *bt;
+    static QMediaPlaylist *playlist;
     static QStandardItemModel *model;
     static QMediaPlayer *player;
     static MusicInterface *musicInterface;
     static AudioSystem *instance;
+
+    bool srcIsBt;
 };
 
 #endif

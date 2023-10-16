@@ -19,7 +19,7 @@ public:
     void constructToolBar();
 
     //Setters
-    void setNavMenuTxt(std::string txt);
+    static void setNavMenuTxt(std::string txt);
 
     QPushButton *toolBarMenuButton;
 
@@ -28,7 +28,7 @@ private:
     void createToolBarIcons();
 
     QToolBar *toolBar;
-    QLabel *navMenu;
+    static QLabel *navMenu;
     QWidget *toolBarMenu;
 
 public slots:
