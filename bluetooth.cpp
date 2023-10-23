@@ -50,9 +50,16 @@ void Bluetooth::scan(){
 }
 
 void Bluetooth::stopScan(){
-    emit(scanStatus(false));
-    qDebug() << "Stopping scan";
-    discoveryAgent->stop();
+    QDBusInterface adapter("org.bluez", "/org/bluez/hci0", "org.bluez.Adapter1", QDBusConnection::systemBus());
+    if(adapter.isValid()){
+        QDBusReply<void> reply = adapter.call("StopDiscovery");
+        if(reply.isValid()){
+            qDebug() << "Stopping discovery/scan";
+            emit(scanStatus(false));
+        }else{
+            qDebug() << "Stopping discovery FAILED with code:" << reply.error();
+        }
+    }
 }
 
 void Bluetooth::pairAndConnect(const QString &address, const QString &name){
