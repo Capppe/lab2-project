@@ -55,10 +55,6 @@ void Bluetooth::stopScan(){
     discoveryAgent->stop();
 }
 
-QString Bluetooth::createBluezPath(QString address){
-    return "/org/bluez/hci0/dev_" + address.replace(QRegExp(":"),"_");
-}
-
 void Bluetooth::pairAndConnect(const QString &address, const QString &name){
     stopScan();
 
@@ -215,8 +211,15 @@ void Bluetooth::setDeviceName(const QString &devName){
     this->devName = devName;
 }
 
+QString Bluetooth::createBluezPath(QString address){
+    if(address == nullptr){
+        address = localDevice->connectedDevices().at(0).toString();
+    }
+    return "/org/bluez/hci0/dev_" + address.replace(QRegExp(":"),"_");
+}
+
 QString Bluetooth:: getPlayerPath(){
-    QString bluezAddress = createBluezPath(localDevice->connectedDevices().at(0).toString());
+    QString bluezAddress = createBluezPath();
     QString pPath;
     QDBusInterface playerPath("org.bluez", bluezAddress, "org.bluez.MediaControl1", QDBusConnection::systemBus());
     if(playerPath.isValid()){
@@ -229,7 +232,10 @@ QString Bluetooth:: getPlayerPath(){
 }
 
 QString Bluetooth::getBtMusicStatus(){
-    QString bluezAddress = createBluezPath(localDevice->connectedDevices().at(0).toString());
+    if(localDevice->connectedDevices().size() <= 0){
+        return "NULL";
+    }
+    QString bluezAddress = createBluezPath();
     QString playerPath = getPlayerPath();
 
     QDBusInterface mediaProps("org.bluez", playerPath, "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
@@ -239,19 +245,18 @@ QString Bluetooth::getBtMusicStatus(){
         if (reply.isValid()) {
             QVariant r = reply.value();
 
-            qDebug() << r.toString();
             return r.toString();
-        } else {
-            qDebug() << "Error in statusreply: " << reply.error();
+        } else{
+            qDebug() << reply.error();
         }
     }else{
-        qDebug() << "Media prroperties invalid";
+        qDebug() << "Mediaprops - getBtMusicStatus() invalid";
     }
     return "NULL";
 }
 
 QMap<QString, QVariant> Bluetooth::getBtCurrMusicInfo(){
-    QString bluezAddress = createBluezPath(localDevice->connectedDevices().at(0).toString());
+    QString bluezAddress = createBluezPath();
     QString playerPath = getPlayerPath();
     QMap<QString, QVariant> map;
 
@@ -264,21 +269,16 @@ QMap<QString, QVariant> Bluetooth::getBtCurrMusicInfo(){
             QDBusArgument arg = r.variant().value<QDBusArgument>();
           
             arg >> map;
-
-            for (const QString& key : map.keys()) {
-                qDebug() << "Key: " << key << ", Value: " << map.value(key);
-            }
-        } else {
-            qDebug() << "Error in statusreply: " << message.errorMessage();
         }
-    }else{
-        qDebug() << "Media prroperties invalid";
     }
     return map;
 }
 
 int Bluetooth::getBtSongPos(){
-    QString bluezAddress = createBluezPath(localDevice->connectedDevices().at(0).toString());
+    if(localDevice->connectedDevices().size() <= 0){
+        return 0;
+    }
+    QString bluezAddress = createBluezPath();
     QString playerPath = getPlayerPath();
 
     QDBusInterface mediaProps("org.bluez", playerPath, "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
@@ -293,33 +293,85 @@ int Bluetooth::getBtSongPos(){
     return 0;
 }
 
+void Bluetooth::mPlay(){
+    mDBusCommand(1);
+    qDebug() << "Playing - bt";
+}
+
+void Bluetooth::mPause(){
+    mDBusCommand(2);
+    qDebug() << "Pausing - bt";
+}
+
 void Bluetooth::mStop(){
-    
+    mDBusCommand(3);
 }
 
 void Bluetooth::mSkip(){
-    
+    mDBusCommand(4);
 }
 
 void Bluetooth::mRewind(){
-    
+    mDBusCommand(5);
 }
 
 void Bluetooth::mPrev(){
-    
+    mDBusCommand(6);
 }
 
-void Bluetooth::mDBusCommand(int type){
-    QString bluezAddress = createBluezPath(localDevice->connectedDevices().at(0).toString());
-    QDBusInterface mediaProps("org.bluez", bluezAddress+"/player0", "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
+int Bluetooth::mGetPosition(){
+    QDBusReply<QVariant> tmp = mDBusCommand(7);
+    QVariant r = tmp.value();
+    return r.toInt();
+}
 
-    switch (type)
-    {
-    case 1:
-        /* code */
-        break;
-    
-    default:
-        break;
+QDBusReply<QVariant> Bluetooth::mDBusCommand(int type){
+    QString playerPath = getPlayerPath();
+
+    QDBusInterface mediaProps("org.bluez", playerPath, "org.bluez.MediaPlayer1", QDBusConnection::systemBus());
+    if(mediaProps.isValid()){    
+        QDBusReply<QVariant> reply;
+        
+        switch (type)
+        {
+        case 1:
+            reply = mediaProps.call("Play");
+            qDebug() << reply.value().toString();
+            break;
+        case 2:
+            reply = mediaProps.call("Pause");
+            break;
+        case 3:
+            reply = mediaProps.call("Stop");
+            break;
+        case 4:
+            reply = mediaProps.call("Next");
+            break;
+        case 5:
+            reply = mediaProps.call("Rewind");
+            break;
+        case 6:
+            reply = mediaProps.call("Previous");
+            break;
+        case 7:
+            reply = mediaProps.call("Position");
+            break;
+        
+        default:
+            break;
+        }
+        return reply;
     }
+}
+
+void Bluetooth::tester(QString str, QVariantMap map, QStringList strList){
+    qDebug() << "STR: " << str;
+
+    for (const QString& key : map.keys()) {
+        qDebug() << "Key: " << key << ", Value: " << map.value(key);
+    }
+
+    // for(const QString &str : strList){
+    //     qDebug() << "STRLIST: " << str;
+    // }
 }

@@ -32,8 +32,7 @@ void BluetoothInterface::bindButtons(){
     });
     QObject::connect(settings, &QPushButton::clicked, this, [&](){
         this->setActiveButton(settings);
-        //stackedWidget->setCurrentIndex(2);
-        bt->getBtSongPos();
+        stackedWidget->setCurrentIndex(2);
     });
 }
 

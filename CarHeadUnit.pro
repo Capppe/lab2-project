@@ -30,6 +30,7 @@ HEADERS += customWidgets/btDevice.hpp \
            headers/bluetoothInterface.hpp \
            headers/buttonHandler.hpp \
            headers/dataStorage.hpp \
+           headers/dbusWorker.hpp \
            headers/mainMenu.hpp \
            headers/mainWindow.hpp \
            headers/musicInterface.hpp \
@@ -52,6 +53,7 @@ SOURCES += appsInterface.cpp \
            bluetoothInterface.cpp \
            buttonHandler.cpp \
            dataStorage.cpp \
+           dbusWorker.cpp \
            errorHandling.cpp \
            externalInterfaces.cpp \
            internetConnectivity.cpp \

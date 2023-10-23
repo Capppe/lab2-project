@@ -13,6 +13,7 @@ AudioSystem::AudioSystem()
     player = new QMediaPlayer;
     playlist = new QMediaPlaylist;
     bt = Bluetooth::getInstance();
+    musicInterface = getMusicInterface();
     createModel();
     checkSource();
 
@@ -27,22 +28,45 @@ void AudioSystem::bindSignals() {
     if(!player){
         player = new QMediaPlayer;
     }
-    connSongPos = QObject::connect(player, &QMediaPlayer::mediaStatusChanged, [&](QMediaPlayer::MediaStatus status) {
+    signalsToDestroy.append(QObject::connect(player, &QMediaPlayer::mediaStatusChanged, [&](QMediaPlayer::MediaStatus status) {
         updateUi();
         if(status == QMediaPlayer::EndOfMedia){
             playlist->next();
             player->play();
         }
-    });
-    connUiUpdater = QObject::connect(player, &QMediaPlayer::positionChanged, [&](qint64 pos) {
+    }));
+    signalsToDestroy.append(QObject::connect(player, &QMediaPlayer::positionChanged, [&](qint64 pos) {
         MusicInterface::updateSongPosition(pos);
+    }));
+}
+
+void AudioSystem::startBtPosition(){
+    dbusWorker.moveToThread(&dbusThread);
+
+    signalsToDestroy.append(QObject::connect(&dbusWorker, &DBusWorker::result, [&](uint32_t pos){
+        MusicInterface::updateSongPosition(pos);
+    }));
+    signalsToDestroy.append(QObject::connect(&dbusThread, &QThread::started, &dbusWorker, [&](){
+        dbusWorker.operate();
+    }));
+    QObject::connect(&dbusWorker, &DBusWorker::error, [&](QString error){
+        qDebug() << "ERROR:" << error;
     });
+    QObject::connect(&dbusThread, &QThread::finished, &dbusThread, &QThread::deleteLater);
+
+    dbusThread.start();
+}
+
+void AudioSystem::stopBtPosition(){
+    dbusThread.exit();
 }
 
 void AudioSystem::checkSource(){
     QString src = bt->getBtMusicStatus();
+    qDebug() << "SRC: " << src;
     if(src == "paused" || src == "playing"){
         updateBtUi();
+        startBtPosition();
         srcIsBt = true;
     }else{
         srcIsBt = false;
@@ -80,27 +104,42 @@ void AudioSystem::updateBtUi() {
     QVariant duration = musicInfo["Duration"];
     QVariant position = bt->getBtSongPos();
         
-    MusicInterface::setSongName("AA");
-    // MusicInterface::setArtist(artistName.toString());
-    // MusicInterface::setAlbum(albumName.toString());
+    MusicInterface::setSongName(songName.toString());
+    MusicInterface::setArtist(artistName.toString());
+    MusicInterface::setAlbum(albumName.toString());
 
-    // MusicInterface::setSongLength(Utils::getTimeFormat(duration.toInt()));
-    // MusicInterface::setSongSliderDuration(duration.toInt());
-    // MusicInterface::updateSongPosition(position.toInt());
+    MusicInterface::setSongLength(Utils::getTimeFormat(duration.toInt()));
+    MusicInterface::setSongSliderDuration(duration.toInt());
+    MusicInterface::updateSongPosition(position.toInt());
 }
 
 void AudioSystem::updatePlayPauseButton() {
-    MusicInterface::setPlayPauseButtonIcon(player->state() == QMediaPlayer::PausedState ? 1 : 0);
+    if(srcIsBt){
+        MusicInterface::setPlayPauseButtonIcon(bt->getBtMusicStatus() == "playing" ? 1 : 0);
+    }else{
+        MusicInterface::setPlayPauseButtonIcon(player->state() == QMediaPlayer::PausedState ? 1 : 0);
+    }
 }
 
 // Button logic
 void AudioSystem::playPause(){
-    if(player->state() == QMediaPlayer::PlayingState){
-        player->pause();
-    }else if(player->state() == QMediaPlayer::PausedState){
-        player->play();
+    if(srcIsBt){
+        QString status = bt->getBtMusicStatus();
+        if(status == "playing"){
+            bt->mPause();
+        }else if(status == "paused"){
+            bt->mPlay();
+        }else{
+            qDebug() << "Somting do bt";
+        }
     }else{
-        qDebug() << "Do something";
+        if(player->state() == QMediaPlayer::PlayingState){
+            player->pause();
+        }else if(player->state() == QMediaPlayer::PausedState){
+            player->play();
+        }else{
+            qDebug() << "Do something";
+        }
     }
     updatePlayPauseButton();
 }
@@ -114,6 +153,7 @@ void AudioSystem::skipButton(){
     playlist->next();
     player->play();
     bt->mSkip();
+    QTimer::singleShot(2000, [&](){updateBtUi();});
 }
 
 void AudioSystem::rewindButton(){
@@ -125,6 +165,7 @@ void AudioSystem::rewindButton(){
         player->play();
         bt->mPrev();
     }
+    QTimer::singleShot(2000, [&](){updateBtUi();});
 }
 
 void AudioSystem::shuffleButton(){
@@ -260,12 +301,8 @@ void AudioSystem::setMedia(QString path){
 }
 
 // Getters
-QMetaObject::Connection AudioSystem::getConnSongPos() {
-    return connSongPos;
-}
-
-QMetaObject::Connection AudioSystem::getConnUiUpdater() {
-    return connUiUpdater;
+QList<QMetaObject::Connection> AudioSystem::getSignalsList() {
+    return signalsToDestroy;
 }
 
 AudioSystem *AudioSystem::getInstance() {

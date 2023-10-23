@@ -59,6 +59,7 @@ SOURCES       = appsInterface.cpp \
 		bluetoothInterface.cpp \
 		buttonHandler.cpp \
 		dataStorage.cpp \
+		dbusWorker.cpp \
 		errorHandling.cpp \
 		externalInterfaces.cpp \
 		internetConnectivity.cpp \
@@ -83,6 +84,7 @@ SOURCES       = appsInterface.cpp \
 		moc/moc_bluetooth.cpp \
 		moc/moc_bluetoothInterface.cpp \
 		moc/moc_buttonHandler.cpp \
+		moc/moc_dbusWorker.cpp \
 		moc/moc_mainMenu.cpp \
 		moc/moc_mainWindow.cpp \
 		moc/moc_navigationInterface.cpp \
@@ -96,6 +98,7 @@ OBJECTS       = obj/appsInterface.o \
 		obj/bluetoothInterface.o \
 		obj/buttonHandler.o \
 		obj/dataStorage.o \
+		obj/dbusWorker.o \
 		obj/errorHandling.o \
 		obj/externalInterfaces.o \
 		obj/internetConnectivity.o \
@@ -121,6 +124,7 @@ OBJECTS       = obj/appsInterface.o \
 		obj/moc_bluetooth.o \
 		obj/moc_bluetoothInterface.o \
 		obj/moc_buttonHandler.o \
+		obj/moc_dbusWorker.o \
 		obj/moc_mainMenu.o \
 		obj/moc_mainWindow.o \
 		obj/moc_navigationInterface.o \
@@ -395,6 +399,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		headers/bluetoothInterface.hpp \
 		headers/buttonHandler.hpp \
 		headers/dataStorage.hpp \
+		headers/dbusWorker.hpp \
 		headers/mainMenu.hpp \
 		headers/mainWindow.hpp \
 		headers/musicInterface.hpp \
@@ -415,6 +420,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		bluetoothInterface.cpp \
 		buttonHandler.cpp \
 		dataStorage.cpp \
+		dbusWorker.cpp \
 		errorHandling.cpp \
 		externalInterfaces.cpp \
 		internetConnectivity.cpp \
@@ -978,8 +984,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents customWidgets/btDevice.hpp customWidgets/customButton.hpp customWidgets/settingsRow.hpp headers/appsInterface.hpp headers/APIhandler.hpp headers/audioSystem.hpp headers/bluetooth.hpp headers/bluetoothInterface.hpp headers/buttonHandler.hpp headers/dataStorage.hpp headers/mainMenu.hpp headers/mainWindow.hpp headers/musicInterface.hpp headers/navigationInterface.hpp headers/navigationSystem.hpp headers/radioInterface.hpp headers/statusBar.hpp headers/toolBar.hpp headers/utils.hpp uic/ui_drawerMenu.h uic/ui_fileBrowser.h uic/ui_musicInterface.h uic/ui_statusBar.h uic/ui_test.h $(DISTDIR)/
-	$(COPY_FILE) --parents appsInterface.cpp APIhandler.cpp audioSystem.cpp bluetooth.cpp bluetoothInterface.cpp buttonHandler.cpp dataStorage.cpp errorHandling.cpp externalInterfaces.cpp internetConnectivity.cpp main.cpp mainMenu.cpp mainWindow.cpp mediaLibrary.cpp musicInterface.cpp navigationInterface.cpp navigationSystem.cpp radioInterface.cpp settingsManager.cpp statusBar.cpp toolBar.cpp utils.cpp customWidgets/btDevice.cpp customWidgets/customButton.cpp customWidgets/settingsRow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents customWidgets/btDevice.hpp customWidgets/customButton.hpp customWidgets/settingsRow.hpp headers/appsInterface.hpp headers/APIhandler.hpp headers/audioSystem.hpp headers/bluetooth.hpp headers/bluetoothInterface.hpp headers/buttonHandler.hpp headers/dataStorage.hpp headers/dbusWorker.hpp headers/mainMenu.hpp headers/mainWindow.hpp headers/musicInterface.hpp headers/navigationInterface.hpp headers/navigationSystem.hpp headers/radioInterface.hpp headers/statusBar.hpp headers/toolBar.hpp headers/utils.hpp uic/ui_drawerMenu.h uic/ui_fileBrowser.h uic/ui_musicInterface.h uic/ui_statusBar.h uic/ui_test.h $(DISTDIR)/
+	$(COPY_FILE) --parents appsInterface.cpp APIhandler.cpp audioSystem.cpp bluetooth.cpp bluetoothInterface.cpp buttonHandler.cpp dataStorage.cpp dbusWorker.cpp errorHandling.cpp externalInterfaces.cpp internetConnectivity.cpp main.cpp mainMenu.cpp mainWindow.cpp mediaLibrary.cpp musicInterface.cpp navigationInterface.cpp navigationSystem.cpp radioInterface.cpp settingsManager.cpp statusBar.cpp toolBar.cpp utils.cpp customWidgets/btDevice.cpp customWidgets/customButton.cpp customWidgets/settingsRow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents test.ui ui/drawerMenu.ui ui/statusBar.ui $(DISTDIR)/
 
 
@@ -1012,9 +1018,9 @@ compiler_moc_predefs_clean:
 moc/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
+compiler_moc_header_make_all: moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
+	-$(DEL_FILE) moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
 moc/moc_btDevice.cpp: customWidgets/btDevice.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
@@ -1052,6 +1058,11 @@ moc/moc_buttonHandler.cpp: headers/buttonHandler.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/buttonHandler.hpp -o moc/moc_buttonHandler.cpp
+
+moc/moc_dbusWorker.cpp: headers/dbusWorker.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/dbusWorker.hpp -o moc/moc_dbusWorker.cpp
 
 moc/moc_mainMenu.cpp: headers/mainMenu.hpp \
 		uic/ui_test.h \
@@ -1128,6 +1139,8 @@ obj/APIhandler.o: APIhandler.cpp headers/APIhandler.hpp
 
 obj/audioSystem.o: audioSystem.cpp headers/audioSystem.hpp \
 		headers/musicInterface.hpp \
+		headers/dbusWorker.hpp \
+		headers/bluetooth.hpp \
 		headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/audioSystem.o audioSystem.cpp
 
@@ -1154,10 +1167,11 @@ obj/buttonHandler.o: buttonHandler.cpp headers/buttonHandler.hpp \
 		uic/ui_test.h \
 		customWidgets/customButton.hpp \
 		headers/audioSystem.hpp \
+		headers/dbusWorker.hpp \
+		headers/bluetooth.hpp \
 		headers/bluetoothInterface.hpp \
 		customWidgets/btDevice.hpp \
 		customWidgets/settingsRow.hpp \
-		headers/bluetooth.hpp \
 		headers/appsInterface.hpp \
 		headers/navigationInterface.hpp \
 		headers/navigationSystem.hpp \
@@ -1169,6 +1183,9 @@ obj/buttonHandler.o: buttonHandler.cpp headers/buttonHandler.hpp \
 obj/dataStorage.o: dataStorage.cpp headers/dataStorage.hpp \
 		headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/dataStorage.o dataStorage.cpp
+
+obj/dbusWorker.o: dbusWorker.cpp headers/dbusWorker.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/dbusWorker.o dbusWorker.cpp
 
 obj/errorHandling.o: errorHandling.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/errorHandling.o errorHandling.cpp
@@ -1205,6 +1222,8 @@ obj/mediaLibrary.o: mediaLibrary.cpp
 obj/musicInterface.o: musicInterface.cpp headers/musicInterface.hpp \
 		headers/buttonHandler.hpp \
 		headers/audioSystem.hpp \
+		headers/dbusWorker.hpp \
+		headers/bluetooth.hpp \
 		headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/musicInterface.o musicInterface.cpp
 
@@ -1220,7 +1239,9 @@ obj/radioInterface.o: radioInterface.cpp headers/radioInterface.hpp \
 		headers/dataStorage.hpp \
 		headers/APIhandler.hpp \
 		headers/audioSystem.hpp \
-		headers/musicInterface.hpp
+		headers/musicInterface.hpp \
+		headers/dbusWorker.hpp \
+		headers/bluetooth.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/radioInterface.o radioInterface.cpp
 
 obj/settingsManager.o: settingsManager.cpp 
@@ -1268,6 +1289,9 @@ obj/moc_bluetoothInterface.o: moc/moc_bluetoothInterface.cpp
 
 obj/moc_buttonHandler.o: moc/moc_buttonHandler.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_buttonHandler.o moc/moc_buttonHandler.cpp
+
+obj/moc_dbusWorker.o: moc/moc_dbusWorker.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_dbusWorker.o moc/moc_dbusWorker.cpp
 
 obj/moc_mainMenu.o: moc/moc_mainMenu.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_mainMenu.o moc/moc_mainMenu.cpp

@@ -24,8 +24,10 @@ MusicInterface::MusicInterface()
 
 MusicInterface::~MusicInterface() 
 {
-    QObject::disconnect(AudioSystem::getInstance()->getConnSongPos());
-    QObject::disconnect(AudioSystem::getInstance()->getConnUiUpdater());
+    QList<QMetaObject::Connection> list = AudioSystem::getInstance()->getSignalsList();
+    for(QMetaObject::Connection con : list){
+        QObject::disconnect(con);
+    }
     qDebug() << "Music destroyed";
 }
 

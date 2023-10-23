@@ -32,12 +32,18 @@ public:
     void disconnect(const QString &address);
     void unpair(const QString &address);
 
+    void mPlay();
+    void mPause();
     void mStop();
     void mSkip();
     void mRewind();
     void mPrev();
+    int mGetPosition();
 
-    QString createBluezPath(QString address);
+    QString createBluezPath(QString address = nullptr);
+    QString getPlayerPath();
+    
+    QDBusInterface getDBusInterface();
     QMap<QString, QString> getSettings();
     QList<QBluetoothAddress> getCurrentDevices();
 
@@ -50,13 +56,13 @@ public:
     QString getBtMusicStatus();
     QMap<QString, QVariant> getBtCurrMusicInfo();
     int getBtSongPos();
+    void tester(QString str, QVariantMap map, QStringList strList);
     
 private:
     Bluetooth();
     ~Bluetooth();
 
-    void mDBusCommand(int type);
-    QString getPlayerPath();
+    QDBusReply<QVariant> mDBusCommand(int type);
 
 
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;
