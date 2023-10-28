@@ -25,3 +25,12 @@ void BtScanner::stopScan(){
         qDebug() << "Stop scan error:" << r.error();
     }
 }
+
+bool BtScanner::isScanning(){
+    QVariant r = adapterIface->property("Discoverable");
+    if(r.isValid()){
+        qDebug() << "Discoverable: " << r.toBool();
+    }else{
+        qDebug() << "Discoverable: " << r.toBool();
+    }
+}

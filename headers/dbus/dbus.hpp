@@ -9,6 +9,7 @@
 #include <QString>
 #include <QObject>
 #include <QDebug>
+#include <QList>
 
 class DBus : public QObject
 {
@@ -18,7 +19,7 @@ public:
     ~DBus();
 
     QDBusInterface *createDBusInterface(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection = QDBusConnection::systemBus());
-    QDBusReply<void> callDBusMethod(QDBusInterface *iface, const QString &method, QVariantList argList = QVariantList());
+    QDBusReply<void> callDBusMethod(QDBusInterface *iface, const QString &method, QList<QVariant> argList = QList<QVariant>());
     QVariant callDBusProperties(QString service, QString path, QString name, QString method, QString iface);
 
     //Tools

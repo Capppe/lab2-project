@@ -17,6 +17,7 @@ public:
 
     void scan();
     void stopScan();
+    bool isScanning();
 
 private:
     DBus dbus;

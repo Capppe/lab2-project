@@ -190,6 +190,7 @@ void BluetoothInterface::addConnectedDevice(BtDevice *device){
     scrollAreaLayout->addWidget(device);
     knownDeviceList->append(device);
     device->setOnPaired();
+    DataStorage::saveBtDevice(device->getName(), device->getAddress());
     emit(this->pairedDeviceUpdate());
 }
 

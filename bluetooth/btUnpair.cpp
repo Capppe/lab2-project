@@ -5,13 +5,14 @@ BtUnpair::~BtUnpair() {}
 
 void BtUnpair::executeMethod(QVariant bluezAddress){
     DBus dbus;
+    qDebug() << "Trying to remove: " << bluezAddress.toString();
     QVariantList addressList;
-    addressList.append(bluezAddress.toString());
-    QDBusInterface *adapterIface = dbus.createDBusInterface("org.bluez", "org/bluez/hci0", "org.bluez.Adapter1", QDBusConnection::systemBus());
+    addressList.append(QDBusObjectPath(bluezAddress.toString()));
+    QDBusInterface *adapterIface = dbus.createDBusInterface("org.bluez", "/org/bluez/hci0", "org.bluez.Adapter1", QDBusConnection::systemBus());
     QDBusReply<void> r = dbus.callDBusMethod(adapterIface, "RemoveDevice", addressList);
     if(r.isValid()){
-        qDebug() << "Paired?";
+        qDebug() << "Removed?";
     }else{
-        qDebug() << "Pairing error:" << r.error();
+        qDebug() << "Removal error:" << r.error();
     }
 }

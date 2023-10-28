@@ -9,7 +9,7 @@ QDBusInterface *DBus::createDBusInterface(const QString &service, const QString 
     return iface->isValid() == true ? iface : nullptr;
 }
 
-QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &method, QVariantList argList)
+QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &method, QList<QVariant> argList)
 {
     QDBusReply<void> reply;
     if(!iface){
@@ -17,6 +17,7 @@ QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &meth
         return reply;
     }
     if(!argList.isEmpty()){
+        qDebug() << "Arglist NOT empty, method: " << method << "args: " << argList;
         iface->callWithArgumentList(QDBus::AutoDetect, method, argList);
     }else{
         qDebug() << "Arglist empty, method: " << method;
