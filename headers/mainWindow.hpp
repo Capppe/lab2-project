@@ -4,6 +4,9 @@
 #include <QToolBar>
 #include <QMainWindow>
 #include <QtWidgets>
+#include <QThread>
+
+#include "bt/btDeviceListener.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -19,9 +22,13 @@ public:
 private:
     void setupToolBar();
     void setupStatusBar();
+    void startBackgroundProcesses();
 
     static MainWindow *mainWindow;
     QWidget *mainWidget;
+
+    BtDeviceListener *listener;
+    QThread devListenerThread;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

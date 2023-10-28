@@ -1,5 +1,4 @@
 #include "headers/mainWindow.hpp"
-#include "headers/buttonHandler.hpp"
 #include "headers/toolBar.hpp"
 #include "headers/statusBar.hpp"
 #include "headers/mainMenu.hpp"
@@ -15,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Creating statusbar";
     this->setupStatusBar();
     this->setupMainMenu();
+    this->startBackgroundProcesses();
 
     this->setStyleSheet(
         "QMainWindow{background-color: gray; border: none;} \
@@ -53,6 +53,13 @@ void MainWindow::setupStatusBar() {
     statusBar->bindButtons();
 
     mainStatusBar->addWidget(statusBar);
+}
+
+void MainWindow::startBackgroundProcesses() {
+    listener = BtDeviceListener::getInstance();
+    listener->moveToThread(&devListenerThread);
+    devListenerThread.start();
+    //QProcess::execute("bt-agent -c NoInputNoOutput");
 }
 
 void showMenu() {

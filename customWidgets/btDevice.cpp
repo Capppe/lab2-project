@@ -26,6 +26,7 @@ BtDevice::BtDevice(const QString name, const QString address, QWidget *parent = 
 
     setStyling();
     bindButtons();
+    bindSignals();
     addLayouts();
 }
 
@@ -50,11 +51,19 @@ void BtDevice::bindButtons(){
     QObject::connect(deleteButton, &QPushButton::clicked, this, &BtDevice::onRemoveButtonClicked);
 }
 
+void BtDevice::bindSignals(){
+    BtDeviceListener *listener = BtDeviceListener::getInstance();
+    QObject::connect(listener, &BtDeviceListener::deviceConnected, this, &BtDevice::setOnConnected);
+    QObject::connect(listener, &BtDeviceListener::deviceDisconnected, this, &BtDevice::setOnDisconnected);
+}
+
 void BtDevice::onConnectButtonClicked(){
-    emit(connectButtonClicked(this->address->text(), this->name->text()));
+    qDebug() << "Emitting connectButtonClicked(" << this->address->text() << ")";
+    emit(connectButtonClicked(this->address->text()));
 }
 
 void BtDevice::onDisconnectButtonClicked(){
+    qDebug() << "Emitting disconnectButtonClicked(" << this->address->text() << ")";
     emit(disconnectButtonClicked(this->address->text()));
 }
 
@@ -136,18 +145,20 @@ void BtDevice::setOnDisconnecting(){
 
 void BtDevice::setOnConnected(){
     qDebug() << "Setting on connect";
+    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onConnectButtonClicked);
+    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onDisconnectButtonClicked);
     connectButton->setText("Disconnect");
     this->statusLabel->setText("");
-    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onConnectButtonClicked);
-    QObject::connect(connectButton, &QPushButton::clicked, this, &BtDevice::onDisconnectButtonClicked);
+    QObject::connect(connectButton, &QPushButton::clicked, this, &BtDevice::onDisconnectButtonClicked, Qt::UniqueConnection);
 }
 
 void BtDevice::setOnDisconnected(){
     qDebug() << "Setting on disconnect";
+    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onConnectButtonClicked);
+    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onDisconnectButtonClicked);
     this->statusLabel->setText("");
     connectButton->setText("Connect");
-    QObject::disconnect(connectButton, &QPushButton::clicked, this, &BtDevice::onDisconnectButtonClicked);
-    QObject::connect(connectButton, &QPushButton::clicked, this, &BtDevice::onConnectButtonClicked);
+    QObject::connect(connectButton, &QPushButton::clicked, this, &BtDevice::onConnectButtonClicked, Qt::UniqueConnection);
 }
 
 //Event overrides

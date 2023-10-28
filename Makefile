@@ -40,7 +40,7 @@ DISTNAME      = CarHeadUnit1.0.0
 DISTDIR = /home/cappe/School/Lab2/CarHeadUnit/obj/CarHeadUnit1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -pipe -O2 -flto=8 -fno-fat-lto-objects -fuse-linker-plugin -Wl,-rpath-link,/usr/lib -fPIC
-LIBS          = $(SUBLIBS) -ltag -lglib-2.0 -rdynamic /usr/lib/libQt5WebEngineWidgets.so /usr/lib/libQt5PrintSupport.so /usr/lib/libQt5Widgets.so /usr/lib/libQt5Multimedia.so /usr/lib/libQt5WebEngineCore.so /usr/lib/libQt5Quick.so /usr/lib/libQt5Gui.so /usr/lib/libQt5QmlModels.so /usr/lib/libQt5WebChannel.so /usr/lib/libQt5Qml.so /usr/lib/libQt5Network.so /usr/lib/libQt5Bluetooth.so /usr/lib/libQt5DBus.so /usr/lib/libQt5Positioning.so /usr/lib/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) -ltag -lglib-2.0 /usr/lib/libQt5WebEngineWidgets.so /usr/lib/libQt5PrintSupport.so /usr/lib/libQt5Widgets.so /usr/lib/libQt5Multimedia.so /usr/lib/libQt5WebEngineCore.so /usr/lib/libQt5Quick.so /usr/lib/libQt5Gui.so /usr/lib/libQt5QmlModels.so /usr/lib/libQt5WebChannel.so /usr/lib/libQt5Qml.so /usr/lib/libQt5Network.so /usr/lib/libQt5Bluetooth.so /usr/lib/libQt5DBus.so /usr/lib/libQt5Positioning.so /usr/lib/libQt5Core.so -lGL -lpthread   
 AR            = gcc-ar cqs
 RANLIB        = 
 SED           = sed
@@ -52,11 +52,9 @@ OBJECTS_DIR   = obj/
 
 ####### Files
 
-SOURCES       = appsInterface.cpp \
-		APIhandler.cpp \
+SOURCES       = APIhandler.cpp \
+		appsInterface.cpp \
 		audioSystem.cpp \
-		bluetooth.cpp \
-		bluetoothInterface.cpp \
 		buttonHandler.cpp \
 		dataStorage.cpp \
 		dbusWorker.cpp \
@@ -75,9 +73,19 @@ SOURCES       = appsInterface.cpp \
 		statusBar.cpp \
 		toolBar.cpp \
 		utils.cpp \
+		bluetooth/bluetooth.cpp \
+		bluetooth/bluetoothInterface.cpp \
+		bluetooth/btConnect.cpp \
+		bluetooth/btDeviceListener.cpp \
+		bluetooth/btDisconnect.cpp \
+		bluetooth/btPair.cpp \
+		bluetooth/btScan.cpp \
+		bluetooth/btUnpair.cpp \
+		bluetooth/btDiscoveredDevices.cpp \
 		customWidgets/btDevice.cpp \
 		customWidgets/customButton.cpp \
-		customWidgets/settingsRow.cpp moc/moc_btDevice.cpp \
+		customWidgets/settingsRow.cpp \
+		dbus/dbus.cpp moc/moc_btDevice.cpp \
 		moc/moc_customButton.cpp \
 		moc/moc_settingsRow.cpp \
 		moc/moc_APIhandler.cpp \
@@ -90,12 +98,19 @@ SOURCES       = appsInterface.cpp \
 		moc/moc_navigationInterface.cpp \
 		moc/moc_radioInterface.cpp \
 		moc/moc_statusBar.cpp \
-		moc/moc_toolBar.cpp
-OBJECTS       = obj/appsInterface.o \
-		obj/APIhandler.o \
+		moc/moc_toolBar.cpp \
+		moc/moc_btConnect.cpp \
+		moc/moc_btDeviceListener.cpp \
+		moc/moc_btDisconnect.cpp \
+		moc/moc_btPair.cpp \
+		moc/moc_btScan.cpp \
+		moc/moc_btUnpair.cpp \
+		moc/moc_btDiscoveredDevices.cpp \
+		moc/moc_btAbstractClass.cpp \
+		moc/moc_dbus.cpp
+OBJECTS       = obj/APIhandler.o \
+		obj/appsInterface.o \
 		obj/audioSystem.o \
-		obj/bluetooth.o \
-		obj/bluetoothInterface.o \
 		obj/buttonHandler.o \
 		obj/dataStorage.o \
 		obj/dbusWorker.o \
@@ -114,9 +129,19 @@ OBJECTS       = obj/appsInterface.o \
 		obj/statusBar.o \
 		obj/toolBar.o \
 		obj/utils.o \
+		obj/bluetooth.o \
+		obj/bluetoothInterface.o \
+		obj/btConnect.o \
+		obj/btDeviceListener.o \
+		obj/btDisconnect.o \
+		obj/btPair.o \
+		obj/btScan.o \
+		obj/btUnpair.o \
+		obj/btDiscoveredDevices.o \
 		obj/btDevice.o \
 		obj/customButton.o \
 		obj/settingsRow.o \
+		obj/dbus.o \
 		obj/moc_btDevice.o \
 		obj/moc_customButton.o \
 		obj/moc_settingsRow.o \
@@ -130,7 +155,16 @@ OBJECTS       = obj/appsInterface.o \
 		obj/moc_navigationInterface.o \
 		obj/moc_radioInterface.o \
 		obj/moc_statusBar.o \
-		obj/moc_toolBar.o
+		obj/moc_toolBar.o \
+		obj/moc_btConnect.o \
+		obj/moc_btDeviceListener.o \
+		obj/moc_btDisconnect.o \
+		obj/moc_btPair.o \
+		obj/moc_btScan.o \
+		obj/moc_btUnpair.o \
+		obj/moc_btDiscoveredDevices.o \
+		obj/moc_btAbstractClass.o \
+		obj/moc_dbus.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -392,8 +426,8 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		CarHeadUnit.pro customWidgets/btDevice.hpp \
 		customWidgets/customButton.hpp \
 		customWidgets/settingsRow.hpp \
-		headers/appsInterface.hpp \
 		headers/APIhandler.hpp \
+		headers/appsInterface.hpp \
 		headers/audioSystem.hpp \
 		headers/bluetooth.hpp \
 		headers/bluetoothInterface.hpp \
@@ -413,11 +447,18 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		uic/ui_fileBrowser.h \
 		uic/ui_musicInterface.h \
 		uic/ui_statusBar.h \
-		uic/ui_test.h appsInterface.cpp \
-		APIhandler.cpp \
+		uic/ui_test.h \
+		headers/bt/btConnect.hpp \
+		headers/bt/btDeviceListener.hpp \
+		headers/bt/btDisconnect.hpp \
+		headers/bt/btPair.hpp \
+		headers/bt/btScan.hpp \
+		headers/bt/btUnpair.hpp \
+		headers/bt/btDiscoveredDevices.hpp \
+		headers/bt/btAbstractClass.hpp \
+		headers/dbus/dbus.hpp APIhandler.cpp \
+		appsInterface.cpp \
 		audioSystem.cpp \
-		bluetooth.cpp \
-		bluetoothInterface.cpp \
 		buttonHandler.cpp \
 		dataStorage.cpp \
 		dbusWorker.cpp \
@@ -436,9 +477,19 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		statusBar.cpp \
 		toolBar.cpp \
 		utils.cpp \
+		bluetooth/bluetooth.cpp \
+		bluetooth/bluetoothInterface.cpp \
+		bluetooth/btConnect.cpp \
+		bluetooth/btDeviceListener.cpp \
+		bluetooth/btDisconnect.cpp \
+		bluetooth/btPair.cpp \
+		bluetooth/btScan.cpp \
+		bluetooth/btUnpair.cpp \
+		bluetooth/btDiscoveredDevices.cpp \
 		customWidgets/btDevice.cpp \
 		customWidgets/customButton.cpp \
-		customWidgets/settingsRow.cpp
+		customWidgets/settingsRow.cpp \
+		dbus/dbus.cpp
 QMAKE_TARGET  = CarHeadUnit
 DESTDIR       = 
 TARGET        = CarHeadUnit
@@ -984,8 +1035,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents customWidgets/btDevice.hpp customWidgets/customButton.hpp customWidgets/settingsRow.hpp headers/appsInterface.hpp headers/APIhandler.hpp headers/audioSystem.hpp headers/bluetooth.hpp headers/bluetoothInterface.hpp headers/buttonHandler.hpp headers/dataStorage.hpp headers/dbusWorker.hpp headers/mainMenu.hpp headers/mainWindow.hpp headers/musicInterface.hpp headers/navigationInterface.hpp headers/navigationSystem.hpp headers/radioInterface.hpp headers/statusBar.hpp headers/toolBar.hpp headers/utils.hpp uic/ui_drawerMenu.h uic/ui_fileBrowser.h uic/ui_musicInterface.h uic/ui_statusBar.h uic/ui_test.h $(DISTDIR)/
-	$(COPY_FILE) --parents appsInterface.cpp APIhandler.cpp audioSystem.cpp bluetooth.cpp bluetoothInterface.cpp buttonHandler.cpp dataStorage.cpp dbusWorker.cpp errorHandling.cpp externalInterfaces.cpp internetConnectivity.cpp main.cpp mainMenu.cpp mainWindow.cpp mediaLibrary.cpp musicInterface.cpp navigationInterface.cpp navigationSystem.cpp radioInterface.cpp settingsManager.cpp statusBar.cpp toolBar.cpp utils.cpp customWidgets/btDevice.cpp customWidgets/customButton.cpp customWidgets/settingsRow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents customWidgets/btDevice.hpp customWidgets/customButton.hpp customWidgets/settingsRow.hpp headers/APIhandler.hpp headers/appsInterface.hpp headers/audioSystem.hpp headers/bluetooth.hpp headers/bluetoothInterface.hpp headers/buttonHandler.hpp headers/dataStorage.hpp headers/dbusWorker.hpp headers/mainMenu.hpp headers/mainWindow.hpp headers/musicInterface.hpp headers/navigationInterface.hpp headers/navigationSystem.hpp headers/radioInterface.hpp headers/statusBar.hpp headers/toolBar.hpp headers/utils.hpp uic/ui_drawerMenu.h uic/ui_fileBrowser.h uic/ui_musicInterface.h uic/ui_statusBar.h uic/ui_test.h headers/bt/btConnect.hpp headers/bt/btDeviceListener.hpp headers/bt/btDisconnect.hpp headers/bt/btPair.hpp headers/bt/btScan.hpp headers/bt/btUnpair.hpp headers/bt/btDiscoveredDevices.hpp headers/bt/btAbstractClass.hpp headers/dbus/dbus.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents APIhandler.cpp appsInterface.cpp audioSystem.cpp buttonHandler.cpp dataStorage.cpp dbusWorker.cpp errorHandling.cpp externalInterfaces.cpp internetConnectivity.cpp main.cpp mainMenu.cpp mainWindow.cpp mediaLibrary.cpp musicInterface.cpp navigationInterface.cpp navigationSystem.cpp radioInterface.cpp settingsManager.cpp statusBar.cpp toolBar.cpp utils.cpp bluetooth/bluetooth.cpp bluetooth/bluetoothInterface.cpp bluetooth/btConnect.cpp bluetooth/btDeviceListener.cpp bluetooth/btDisconnect.cpp bluetooth/btPair.cpp bluetooth/btScan.cpp bluetooth/btUnpair.cpp bluetooth/btDiscoveredDevices.cpp customWidgets/btDevice.cpp customWidgets/customButton.cpp customWidgets/settingsRow.cpp dbus/dbus.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents test.ui ui/drawerMenu.ui ui/statusBar.ui $(DISTDIR)/
 
 
@@ -1018,10 +1069,11 @@ compiler_moc_predefs_clean:
 moc/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
+compiler_moc_header_make_all: moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp moc/moc_btConnect.cpp moc/moc_btDeviceListener.cpp moc/moc_btDisconnect.cpp moc/moc_btPair.cpp moc/moc_btScan.cpp moc/moc_btUnpair.cpp moc/moc_btDiscoveredDevices.cpp moc/moc_btAbstractClass.cpp moc/moc_dbus.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp
+	-$(DEL_FILE) moc/moc_btDevice.cpp moc/moc_customButton.cpp moc/moc_settingsRow.cpp moc/moc_APIhandler.cpp moc/moc_bluetooth.cpp moc/moc_bluetoothInterface.cpp moc/moc_buttonHandler.cpp moc/moc_dbusWorker.cpp moc/moc_mainMenu.cpp moc/moc_mainWindow.cpp moc/moc_navigationInterface.cpp moc/moc_radioInterface.cpp moc/moc_statusBar.cpp moc/moc_toolBar.cpp moc/moc_btConnect.cpp moc/moc_btDeviceListener.cpp moc/moc_btDisconnect.cpp moc/moc_btPair.cpp moc/moc_btScan.cpp moc/moc_btUnpair.cpp moc/moc_btDiscoveredDevices.cpp moc/moc_btAbstractClass.cpp moc/moc_dbus.cpp
 moc/moc_btDevice.cpp: customWidgets/btDevice.hpp \
+		headers/bt/btDeviceListener.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include customWidgets/btDevice.hpp -o moc/moc_btDevice.cpp
@@ -1047,8 +1099,17 @@ moc/moc_bluetooth.cpp: headers/bluetooth.hpp \
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bluetooth.hpp -o moc/moc_bluetooth.cpp
 
 moc/moc_bluetoothInterface.cpp: headers/bluetoothInterface.hpp \
-		customWidgets/btDevice.hpp \
 		customWidgets/settingsRow.hpp \
+		customWidgets/btDevice.hpp \
+		headers/bt/btDeviceListener.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btDiscoveredDevices.hpp \
+		headers/bt/btDisconnect.hpp \
+		headers/bt/btConnect.hpp \
+		headers/bt/btAbstractClass.hpp \
+		headers/bt/btUnpair.hpp \
+		headers/bt/btScan.hpp \
+		headers/bt/btPair.hpp \
 		headers/bluetooth.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
@@ -1060,6 +1121,7 @@ moc/moc_buttonHandler.cpp: headers/buttonHandler.hpp \
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/buttonHandler.hpp -o moc/moc_buttonHandler.cpp
 
 moc/moc_dbusWorker.cpp: headers/dbusWorker.hpp \
+		headers/bluetooth.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/dbusWorker.hpp -o moc/moc_dbusWorker.cpp
@@ -1072,6 +1134,7 @@ moc/moc_mainMenu.cpp: headers/mainMenu.hpp \
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/mainMenu.hpp -o moc/moc_mainMenu.cpp
 
 moc/moc_mainWindow.cpp: headers/mainWindow.hpp \
+		headers/bt/btDeviceListener.hpp \
 		moc/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/mainWindow.hpp -o moc/moc_mainWindow.cpp
@@ -1102,6 +1165,59 @@ moc/moc_toolBar.cpp: headers/toolBar.hpp \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/toolBar.hpp -o moc/moc_toolBar.cpp
 
+moc/moc_btConnect.cpp: headers/bt/btConnect.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btAbstractClass.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btConnect.hpp -o moc/moc_btConnect.cpp
+
+moc/moc_btDeviceListener.cpp: headers/bt/btDeviceListener.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btDeviceListener.hpp -o moc/moc_btDeviceListener.cpp
+
+moc/moc_btDisconnect.cpp: headers/bt/btDisconnect.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btDisconnect.hpp -o moc/moc_btDisconnect.cpp
+
+moc/moc_btPair.cpp: headers/bt/btPair.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btPair.hpp -o moc/moc_btPair.cpp
+
+moc/moc_btScan.cpp: headers/bt/btScan.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btScan.hpp -o moc/moc_btScan.cpp
+
+moc/moc_btUnpair.cpp: headers/bt/btUnpair.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btUnpair.hpp -o moc/moc_btUnpair.cpp
+
+moc/moc_btDiscoveredDevices.cpp: headers/bt/btDiscoveredDevices.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btDiscoveredDevices.hpp -o moc/moc_btDiscoveredDevices.cpp
+
+moc/moc_btAbstractClass.cpp: headers/bt/btAbstractClass.hpp \
+		headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/bt/btAbstractClass.hpp -o moc/moc_btAbstractClass.cpp
+
+moc/moc_dbus.cpp: headers/dbus/dbus.hpp \
+		moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/cappe/School/Lab2/CarHeadUnit/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/cappe/School/Lab2/CarHeadUnit -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/qt -I/usr/include/qt/QtWebEngineWidgets -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtMultimedia -I/usr/include/qt/QtWebEngineCore -I/usr/include/qt/QtQuick -I/usr/include/qt/QtGui -I/usr/include/qt/QtQmlModels -I/usr/include/qt/QtWebChannel -I/usr/include/qt/QtQml -I/usr/include/qt/QtNetwork -I/usr/include/qt/QtBluetooth -I/usr/include/qt/QtDBus -I/usr/include/qt/QtPositioning -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include headers/dbus/dbus.hpp -o moc/moc_dbus.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
@@ -1131,11 +1247,11 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-obj/appsInterface.o: appsInterface.cpp headers/appsInterface.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/appsInterface.o appsInterface.cpp
-
 obj/APIhandler.o: APIhandler.cpp headers/APIhandler.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/APIhandler.o APIhandler.cpp
+
+obj/appsInterface.o: appsInterface.cpp headers/appsInterface.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/appsInterface.o appsInterface.cpp
 
 obj/audioSystem.o: audioSystem.cpp headers/audioSystem.hpp \
 		headers/musicInterface.hpp \
@@ -1144,24 +1260,11 @@ obj/audioSystem.o: audioSystem.cpp headers/audioSystem.hpp \
 		headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/audioSystem.o audioSystem.cpp
 
-obj/bluetooth.o: bluetooth.cpp headers/bluetooth.hpp \
-		headers/bluetoothInterface.hpp \
-		customWidgets/btDevice.hpp \
-		customWidgets/settingsRow.hpp \
-		headers/dataStorage.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/bluetooth.o bluetooth.cpp
-
-obj/bluetoothInterface.o: bluetoothInterface.cpp headers/bluetoothInterface.hpp \
-		customWidgets/btDevice.hpp \
-		customWidgets/settingsRow.hpp \
-		headers/bluetooth.hpp \
-		headers/dataStorage.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/bluetoothInterface.o bluetoothInterface.cpp
-
 obj/buttonHandler.o: buttonHandler.cpp headers/buttonHandler.hpp \
 		headers/toolBar.hpp \
 		uic/ui_drawerMenu.h \
 		headers/mainWindow.hpp \
+		headers/bt/btDeviceListener.hpp \
 		headers/musicInterface.hpp \
 		headers/mainMenu.hpp \
 		uic/ui_test.h \
@@ -1170,8 +1273,16 @@ obj/buttonHandler.o: buttonHandler.cpp headers/buttonHandler.hpp \
 		headers/dbusWorker.hpp \
 		headers/bluetooth.hpp \
 		headers/bluetoothInterface.hpp \
-		customWidgets/btDevice.hpp \
 		customWidgets/settingsRow.hpp \
+		customWidgets/btDevice.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btDiscoveredDevices.hpp \
+		headers/bt/btDisconnect.hpp \
+		headers/bt/btConnect.hpp \
+		headers/bt/btAbstractClass.hpp \
+		headers/bt/btUnpair.hpp \
+		headers/bt/btScan.hpp \
+		headers/bt/btPair.hpp \
 		headers/appsInterface.hpp \
 		headers/navigationInterface.hpp \
 		headers/navigationSystem.hpp \
@@ -1184,7 +1295,8 @@ obj/dataStorage.o: dataStorage.cpp headers/dataStorage.hpp \
 		headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/dataStorage.o dataStorage.cpp
 
-obj/dbusWorker.o: dbusWorker.cpp headers/dbusWorker.hpp
+obj/dbusWorker.o: dbusWorker.cpp headers/dbusWorker.hpp \
+		headers/bluetooth.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/dbusWorker.o dbusWorker.cpp
 
 obj/errorHandling.o: errorHandling.cpp 
@@ -1196,7 +1308,8 @@ obj/externalInterfaces.o: externalInterfaces.cpp
 obj/internetConnectivity.o: internetConnectivity.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/internetConnectivity.o internetConnectivity.cpp
 
-obj/main.o: main.cpp headers/mainWindow.hpp
+obj/main.o: main.cpp headers/mainWindow.hpp \
+		headers/bt/btDeviceListener.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o main.cpp
 
 obj/mainMenu.o: mainMenu.cpp headers/mainMenu.hpp \
@@ -1206,7 +1319,7 @@ obj/mainMenu.o: mainMenu.cpp headers/mainMenu.hpp \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/mainMenu.o mainMenu.cpp
 
 obj/mainWindow.o: mainWindow.cpp headers/mainWindow.hpp \
-		headers/buttonHandler.hpp \
+		headers/bt/btDeviceListener.hpp \
 		headers/toolBar.hpp \
 		uic/ui_drawerMenu.h \
 		headers/statusBar.hpp \
@@ -1250,7 +1363,8 @@ obj/settingsManager.o: settingsManager.cpp
 obj/statusBar.o: statusBar.cpp headers/statusBar.hpp \
 		uic/ui_statusBar.h \
 		headers/buttonHandler.hpp \
-		headers/mainWindow.hpp
+		headers/mainWindow.hpp \
+		headers/bt/btDeviceListener.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/statusBar.o statusBar.cpp
 
 obj/toolBar.o: toolBar.cpp headers/toolBar.hpp \
@@ -1260,7 +1374,68 @@ obj/toolBar.o: toolBar.cpp headers/toolBar.hpp \
 obj/utils.o: utils.cpp headers/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/utils.o utils.cpp
 
-obj/btDevice.o: customWidgets/btDevice.cpp customWidgets/btDevice.hpp
+obj/bluetooth.o: bluetooth/bluetooth.cpp headers/bluetooth.hpp \
+		headers/bluetoothInterface.hpp \
+		customWidgets/settingsRow.hpp \
+		customWidgets/btDevice.hpp \
+		headers/bt/btDeviceListener.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btDiscoveredDevices.hpp \
+		headers/bt/btDisconnect.hpp \
+		headers/bt/btConnect.hpp \
+		headers/bt/btAbstractClass.hpp \
+		headers/bt/btUnpair.hpp \
+		headers/bt/btScan.hpp \
+		headers/bt/btPair.hpp \
+		headers/dataStorage.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/bluetooth.o bluetooth/bluetooth.cpp
+
+obj/bluetoothInterface.o: bluetooth/bluetoothInterface.cpp headers/bluetoothInterface.hpp \
+		customWidgets/settingsRow.hpp \
+		customWidgets/btDevice.hpp \
+		headers/bt/btDeviceListener.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btDiscoveredDevices.hpp \
+		headers/bt/btDisconnect.hpp \
+		headers/bt/btConnect.hpp \
+		headers/bt/btAbstractClass.hpp \
+		headers/bt/btUnpair.hpp \
+		headers/bt/btScan.hpp \
+		headers/bt/btPair.hpp \
+		headers/bluetooth.hpp \
+		headers/dataStorage.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/bluetoothInterface.o bluetooth/bluetoothInterface.cpp
+
+obj/btConnect.o: bluetooth/btConnect.cpp headers/bt/btConnect.hpp \
+		headers/dbus/dbus.hpp \
+		headers/bt/btAbstractClass.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btConnect.o bluetooth/btConnect.cpp
+
+obj/btDeviceListener.o: bluetooth/btDeviceListener.cpp headers/bt/btDeviceListener.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btDeviceListener.o bluetooth/btDeviceListener.cpp
+
+obj/btDisconnect.o: bluetooth/btDisconnect.cpp headers/bt/btDisconnect.hpp \
+		headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btDisconnect.o bluetooth/btDisconnect.cpp
+
+obj/btPair.o: bluetooth/btPair.cpp headers/bt/btPair.hpp \
+		headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btPair.o bluetooth/btPair.cpp
+
+obj/btScan.o: bluetooth/btScan.cpp headers/bt/btScan.hpp \
+		headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btScan.o bluetooth/btScan.cpp
+
+obj/btUnpair.o: bluetooth/btUnpair.cpp headers/bt/btUnpair.hpp \
+		headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btUnpair.o bluetooth/btUnpair.cpp
+
+obj/btDiscoveredDevices.o: bluetooth/btDiscoveredDevices.cpp headers/bt/btDiscoveredDevices.hpp \
+		headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btDiscoveredDevices.o bluetooth/btDiscoveredDevices.cpp
+
+obj/btDevice.o: customWidgets/btDevice.cpp customWidgets/btDevice.hpp \
+		headers/bt/btDeviceListener.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/btDevice.o customWidgets/btDevice.cpp
 
 obj/customButton.o: customWidgets/customButton.cpp customWidgets/customButton.hpp
@@ -1268,6 +1443,9 @@ obj/customButton.o: customWidgets/customButton.cpp customWidgets/customButton.hp
 
 obj/settingsRow.o: customWidgets/settingsRow.cpp customWidgets/settingsRow.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/settingsRow.o customWidgets/settingsRow.cpp
+
+obj/dbus.o: dbus/dbus.cpp headers/dbus/dbus.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/dbus.o dbus/dbus.cpp
 
 obj/moc_btDevice.o: moc/moc_btDevice.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btDevice.o moc/moc_btDevice.cpp
@@ -1310,6 +1488,33 @@ obj/moc_statusBar.o: moc/moc_statusBar.cpp
 
 obj/moc_toolBar.o: moc/moc_toolBar.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_toolBar.o moc/moc_toolBar.cpp
+
+obj/moc_btConnect.o: moc/moc_btConnect.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btConnect.o moc/moc_btConnect.cpp
+
+obj/moc_btDeviceListener.o: moc/moc_btDeviceListener.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btDeviceListener.o moc/moc_btDeviceListener.cpp
+
+obj/moc_btDisconnect.o: moc/moc_btDisconnect.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btDisconnect.o moc/moc_btDisconnect.cpp
+
+obj/moc_btPair.o: moc/moc_btPair.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btPair.o moc/moc_btPair.cpp
+
+obj/moc_btScan.o: moc/moc_btScan.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btScan.o moc/moc_btScan.cpp
+
+obj/moc_btUnpair.o: moc/moc_btUnpair.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btUnpair.o moc/moc_btUnpair.cpp
+
+obj/moc_btDiscoveredDevices.o: moc/moc_btDiscoveredDevices.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btDiscoveredDevices.o moc/moc_btDiscoveredDevices.cpp
+
+obj/moc_btAbstractClass.o: moc/moc_btAbstractClass.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_btAbstractClass.o moc/moc_btAbstractClass.cpp
+
+obj/moc_dbus.o: moc/moc_dbus.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_dbus.o moc/moc_dbus.cpp
 
 ####### Install
 

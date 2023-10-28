@@ -26,11 +26,6 @@ public:
     static Bluetooth *getInstance();
 
     void checkLocalDevice();
-    void scan();
-    void stopScan();
-    void pairAndConnect(const QString &address, const QString &name);
-    void disconnect(const QString &address);
-    void unpair(const QString &address);
 
     void mPlay();
     void mPause();
@@ -78,12 +73,6 @@ private:
     QString devName;
 
     static Bluetooth *instance;
-
-private slots:
-    void onDeviceDiscovered(const QBluetoothDeviceInfo &deviceInfo);
-    void onScanFinished();
-    void onDeviceConnected(const QBluetoothAddress &address);
-    void onDeviceDisconnected(const QBluetoothAddress &address);
 
 signals:
     void scanStatus(const bool &visible);

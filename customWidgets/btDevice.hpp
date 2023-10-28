@@ -16,6 +16,8 @@
 #include <QIcon>
 #include <QDir>
 
+#include "../headers/bt/btDeviceListener.hpp"
+
 class BtDevice : public QWidget
 {
     Q_OBJECT
@@ -31,7 +33,6 @@ public:
     void setOnPaired();
     void setOnConnecting();
     void setOnDisconnecting();
-    void setOnConnected();
     void setOnDisconnected();
 
     QPushButton *connectButton;
@@ -41,6 +42,7 @@ public slots:
     void onConnectButtonClicked();
     void onDisconnectButtonClicked();
     void onRemoveButtonClicked();
+    void setOnConnected();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -50,6 +52,7 @@ private:
     void setStyling();
     void addLayouts();
     void bindButtons();
+    void bindSignals();
     QPixmap getDeviceIcon(int device);
 
     QVBoxLayout *mainLayout;
@@ -74,7 +77,7 @@ private:
     QCheckBox *autoConnCheck;
 
 signals:
-    void connectButtonClicked(const QString &address, const QString &name);
+    void connectButtonClicked(const QString &address);
     void disconnectButtonClicked(const QString &address);
     void removeButtonClicked(const QString &address);
 };

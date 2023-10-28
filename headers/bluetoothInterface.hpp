@@ -1,25 +1,34 @@
 #ifndef BLUETOOTHINTERFACE_HPP
 #define BLUETOOTHINTERFACE_HPP
 
-#include <QWidget>
-#include <QStackedWidget>
-#include <QObject>
-#include <QDebug>
-#include <QLayout>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QScrollArea>
-#include <QSettings>
-#include <QDir>
-#include <QList>
-#include <QLabel>
-#include <QMovie>
-#include <QPushButton>
 #include <QBluetoothDeviceInfo>
 #include <QBluetoothSocket>
+#include <QStackedWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSettings>
+#include <QWidget>
+#include <QObject>
+#include <QThread>
+#include <QLayout>
+#include <QLabel>
+#include <QMovie>
+#include <QList>
+#include <QDir>
 
-#include "../customWidgets/btDevice.hpp"
 #include "../customWidgets/settingsRow.hpp"
+#include "../customWidgets/btDevice.hpp"
+#include "../headers/dbus/dbus.hpp"
+#include "../headers/bt/btDiscoveredDevices.hpp"
+#include "../headers/bt/btDeviceListener.hpp"
+#include "../headers/bt/btAbstractClass.hpp"
+#include "../headers/bt/btDisconnect.hpp"
+#include "../headers/bt/btConnect.hpp"
+#include "../headers/bt/btUnpair.hpp"
+#include "../headers/bt/btScan.hpp"
+#include "../headers/bt/btPair.hpp"
 #include "bluetooth.hpp"
 
 class BluetoothInterface : public QWidget
@@ -30,7 +39,7 @@ public:
     BluetoothInterface();
     ~BluetoothInterface();
 
-    void addNewDevices(const QBluetoothDeviceInfo &deviceInfo);
+    void addNewDevices(QString devPath);
     void addNewDevicesToLayout();
 
 private:
@@ -48,6 +57,8 @@ private:
 
     void setActiveButton(QPushButton *activeButton);
     void setSearching(const bool &visible);
+
+    void createSignal(BtAbstractClass *cls, QString arg = QString());
 
     void createSettings();
 
@@ -79,6 +90,16 @@ private:
 
     Bluetooth *bt;
     QLabel *searchGifLabel;
+    
+    //BtDeviceListener *listener;
+    QThread *workerThread;
+    DBus *dbus;
+    QString *dbusPath;
+    BtConnect *c;
+    BtUnpair *btUnpair;
+    BtScanner *btScanner;
+    BtDisconnect *btDisc;
+
 
 signals:
     void pairedDeviceUpdate();
