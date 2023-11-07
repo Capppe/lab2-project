@@ -37,9 +37,17 @@ void MusicInterface::getSource(){
     QStringList connectedDevices = connDevs.getConnectedDevices();
     if(connectedDevices.size() > 0){
         audioSystem = new BtAudioSystem;
+        this->getCurrent();
     }else{
         audioSystem = new LocalAudioSystem;
     }
+}
+
+void MusicInterface::getCurrent(){
+    QString currDevice = connDevs.getConnectedDevices().first();
+    MediaPlayer mediaPlayer(currDevice);
+    QMap<QString, QVariant> map = mediaPlayer.getTrackInfo();
+    updateUi(map);
 }
 
 void MusicInterface::bindButtons() {
@@ -198,6 +206,14 @@ void MusicInterface::styleLayout() {
     treeView->setRootIsDecorated(false);
 }
 
+void MusicInterface::updateUi(QMap<QString, QVariant> map){
+    this->setSongName(map["Title"].toString());
+    this->setAlbum(map["Album"].toString());
+    this->setArtist(map["Artist"].toString());
+    this->setSongLength(Utils::getTimeFormat(map["Duration"].toInt()));
+    this->setSongSliderDuration(map["Duration"].toInt());
+}
+
 void MusicInterface::toggleView(){
     stackedWidget->setCurrentIndex(stackedWidget->currentIndex() == 0 ? 1 : 0);
 }
@@ -221,9 +237,7 @@ void MusicInterface::bindSignals(){
 
     QObject::connect(btDevListener, &BtDeviceListener::position, this, updateSongPosition);
     QObject::connect(btDevListener, &BtDeviceListener::track, this, [&](QVariantMap map){
-        for(const QString &k : map.keys()){
-            qDebug() << "MAP: " << map << "\nKEY: " << k << "VALUE: " << map[k];
-        }
+        updateUi(map);
     });
     //QObject::connect()
 }

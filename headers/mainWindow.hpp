@@ -7,6 +7,7 @@
 #include <QThread>
 
 #include "bt/btDeviceListener.hpp"
+#include "bt/btConnectedDevices.hpp"
 
 class MainWindow : public QMainWindow
 {

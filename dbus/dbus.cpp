@@ -18,6 +18,7 @@ QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &meth
     }
     if(!argList.isEmpty()){
         qDebug() << "Arglist NOT empty, method: " << method << "args: ";
+        
         for(const QVariant v : argList){
             qDebug() << v.toString();
         }

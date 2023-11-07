@@ -29,3 +29,15 @@ void MediaPlayer::next(){
 void MediaPlayer::previous(){
     dbus.callDBusMethod(iface, "Previous");
 }
+
+QMap<QString, QVariant> MediaPlayer::getTrackInfo(){
+    QMap<QString, QVariant> map;
+    BtConnectedDevices connDevs;
+
+    QStringList devs = connDevs.getConnectedDevices();
+
+    QVariant trackInfo = dbus.callDBusProperties("org.bluez", devs.last(), "Track", "Get", "org.bluez.MediaPlayer1");
+    const QDBusArgument &arg = trackInfo.value<QDBusArgument>();
+    arg >> map;
+    return map;
+}

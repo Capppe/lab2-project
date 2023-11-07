@@ -1,7 +1,10 @@
 #ifndef MEDIACONTROL_HPP
 #define MEDIACONTROL_HPP
 
+#include <QMap>
+
 #include "../btAbstractClass.hpp"
+#include "../btConnectedDevices.hpp"
 
 class MediaPlayer : BtAbstractClass
 {
@@ -15,6 +18,8 @@ public:
     void playPause();
     void next();
     void previous();
+
+    QMap<QString, QVariant> getTrackInfo();
 
 private:
     DBus dbus;

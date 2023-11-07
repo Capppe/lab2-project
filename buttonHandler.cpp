@@ -36,12 +36,9 @@ ButtonHandler *ButtonHandler::getInstance() {
 void ButtonHandler::musicButton() {
     MainWindow *mainWindow = MainWindow::getMainWindow();
     if(mainWindow) {
-        AudioSystem *as = AudioSystem::getInstance();
         MusicInterface *mIface = AudioSystem::getMusicInterface();
         BtConnectedDevices connDevs;
         mainWindow->setCentralWidget(mIface);
-        as->updateUi();
-        as->bindSignals();
 
         connDevs.getConnectedDevices().size() > 0 ? 
         ToolBar::setNavMenuTxt("Music - Bluetooth") :

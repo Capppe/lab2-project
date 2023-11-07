@@ -75,11 +75,10 @@ void BtDeviceListener::propertiesChanged(const QString &string, QVariantMap map,
             emit(position(map[k].toInt()));
         }else if(k == "Track"){
             qDebug() << "Emitting: " << "track(" << map[k] << ")";
-                qDebug() << "MAP: " << map[k].toMap().keys();
-            for(const QString &v : map[k].toMap().keys()){
-                qDebug() << "MAP: " << map[k].toMap();// << "\nKEY: " << v << "VALUE: " << map[k].toMap()[v];
-            }
-            emit(track(map[k].toMap()));
+            const QDBusArgument &arg = map[k].value<QDBusArgument>();
+            QMap<QString, QVariant> trackMap;
+            arg >> trackMap;
+            emit(track(trackMap));
         }else if(k == "");
         
     }

@@ -60,6 +60,9 @@ void MainWindow::startBackgroundProcesses() {
     listener->moveToThread(&devListenerThread);
     devListenerThread.start();
 
+    BtConnectedDevices connDevs;
+    connDevs.addListeners();
+
     QProcess *btAgent = new QProcess;
     btAgent->moveToThread(&btAgentThread);
     QObject::connect(&btAgentThread, &QThread::started, [&](){

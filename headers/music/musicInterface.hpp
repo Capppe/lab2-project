@@ -49,6 +49,8 @@ private:
     void populateLayouts();
     void bindSignals();
     void getSource();
+    void getCurrent();
+    void updateUi(QMap<QString, QVariant> map = QMap<QString, QVariant>());
 
     QWidget *containerWidget;
     QWidget *fileWidget;

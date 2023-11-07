@@ -3,6 +3,7 @@
 
 #include <QDBusObjectPath>
 #include <QDBusConnection>
+#include <QDBusArgument>
 #include <QVariantMap>
 #include <QStringList>
 #include <QObject>
