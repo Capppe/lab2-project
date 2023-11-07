@@ -4,7 +4,9 @@
 #include <QDBusInterface>
 #include <QDBusObjectPath>
 #include <QDBusMessage>
+#include <QVariant>
 #include <QObject>
+#include <QString>
 #include <QDebug>
 #include <QMap>
 
@@ -16,7 +18,7 @@ public:
     BtDiscoveredDevices();
     ~BtDiscoveredDevices();
 
-    QStringList getDiscoveredDevices();
+    QMap<QString, QMap<QString, QMap<QString, QVariant>>> getDiscoveredDevices(int type);
 };
 
 #endif

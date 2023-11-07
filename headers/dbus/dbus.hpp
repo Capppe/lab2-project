@@ -19,7 +19,7 @@ public:
     ~DBus();
 
     QDBusInterface *createDBusInterface(const QString &service, const QString &path, const QString &interface, const QDBusConnection &connection = QDBusConnection::systemBus());
-    QDBusReply<void> callDBusMethod(QDBusInterface *iface, const QString &method, QList<QVariant> argList = QList<QVariant>());
+    QDBusReply<void> callDBusMethod(QDBusInterface *iface, const QString &method, QVariantList argList = QVariantList());
     QVariant callDBusProperties(QString service, QString path, QString name, QString method, QString iface);
 
     //Tools

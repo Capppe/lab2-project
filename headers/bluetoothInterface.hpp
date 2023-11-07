@@ -29,6 +29,7 @@
 #include "../headers/bt/btUnpair.hpp"
 #include "../headers/bt/btScan.hpp"
 #include "../headers/bt/btPair.hpp"
+#include "../headers/bt/music/playerPath.hpp"
 #include "bluetooth.hpp"
 
 class BluetoothInterface : public QWidget
@@ -100,6 +101,7 @@ private:
     BtScanner *btScanner;
     BtDisconnect *btDisc;
 
+    PlayerPath *pPath;
 
 signals:
     void pairedDeviceUpdate();

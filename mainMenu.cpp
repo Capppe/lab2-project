@@ -1,5 +1,6 @@
 #include "headers/mainMenu.hpp"
 #include "headers/buttonHandler.hpp"
+#include "headers/bt/btConnectedDevices.hpp"
 
 MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
 {
@@ -15,8 +16,13 @@ void MainMenu::bindButtons(){
         connect(musicButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::musicButton);
         connect(btButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::bluetoothButton);
         connect(navButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::navigationButton);
-        connect(radioButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::radioButton);
+        //connect(radioButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::radioButton);
         connect(appsButton, &CustomButton::clicked, buttonHandler, &ButtonHandler::applicationsButton);
+        connect(radioButton, &CustomButton::clicked, [&](){
+            BtConnectedDevices discDevs;
+            qDebug() << "Executing discDevs";
+            discDevs.getConnectedDevices();
+        });
     }
 }
 

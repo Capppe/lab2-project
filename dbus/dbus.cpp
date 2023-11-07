@@ -9,7 +9,7 @@ QDBusInterface *DBus::createDBusInterface(const QString &service, const QString 
     return iface->isValid() == true ? iface : nullptr;
 }
 
-QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &method, QList<QVariant> argList)
+QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &method, QVariantList argList)
 {
     QDBusReply<void> reply;
     if(!iface){
@@ -17,14 +17,17 @@ QDBusReply<void> DBus::callDBusMethod(QDBusInterface *iface, const QString &meth
         return reply;
     }
     if(!argList.isEmpty()){
-        qDebug() << "Arglist NOT empty, method: " << method << "args: " << argList;
-        iface->callWithArgumentList(QDBus::AutoDetect, method, argList);
+        qDebug() << "Arglist NOT empty, method: " << method << "args: ";
+        for(const QVariant v : argList){
+            qDebug() << v.toString();
+        }
+        iface->callWithArgumentList(QDBus::AutoDetect, method.toLatin1(), argList);
+        qDebug() << "Crash?";
     }else{
         qDebug() << "Arglist empty, method: " << method;
         reply = iface->call(method);
     }
     if(reply.isValid()){
-        // qDebug() << "Calling method " << method << "on interface" << iface.objectName() << "SUCCESS";
         return reply;
     }else{
         qDebug() << reply.error();
@@ -48,5 +51,6 @@ QString DBus::createDBusPath(QString str){
 }
 
 QString DBus::parseDBusPath(QString dbusPath){
+    qDebug() << "Parsing: " << dbusPath;
     return dbusPath.replace("/org/bluez/hci0/dev_", "").replace(QRegExp("_"), ":");
 }

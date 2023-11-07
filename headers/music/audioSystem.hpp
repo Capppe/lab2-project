@@ -13,7 +13,6 @@
 #include <QThread>
 #include <QObject>
 #include <QDebug>
-#include <QTimer>
 #include <QQueue>
 #include <QList>
 #include <QDir>
@@ -22,8 +21,6 @@
 #include <taglib/tag.h>
 
 #include "musicInterface.hpp"
-#include "dbusWorker.hpp"
-#include "bluetooth.hpp"
 
 class AudioSystem 
 {
@@ -43,15 +40,15 @@ public:
     void browseLocalFiles();
     void parseLocalFile(const QItemSelection &selected, const QItemSelection &deselected);
 
-    void startBtPosition();
-    void stopBtPosition();
+    //void startBtPosition();
+    //void stopBtPosition();
     // Getters
     static AudioSystem *getInstance();
     static MusicInterface *getMusicInterface();
     QStringList *getFilteredFilelist(QStringList filters);
     QMetaObject::Connection getConnSongPos();
     QMetaObject::Connection getConnUiUpdater();
-    QMetaObject::Connection getBtSongPos();
+    //QMetaObject::Connection getBtSongPos();
 
     QList<QMetaObject::Connection> getSignalsList();
 
@@ -65,8 +62,8 @@ private:
 
     void updatePlayPauseButton();
     void createModel();
-    void checkSource();
-    void updateBtUi();
+    //void checkSource();
+    //void updateBtUi();
     static QUrl getLocalSongUrl(const QModelIndex &index);
 
 
@@ -76,7 +73,6 @@ private:
     QMetaObject::Connection connUiUpdater;
     QMetaObject::Connection btSongPos;
     QList<QMetaObject::Connection> signalsToDestroy;
-    Bluetooth *bt;
     static QMediaPlaylist *playlist;
     static QStandardItemModel *model;
     static QMediaPlayer *player;
@@ -85,7 +81,6 @@ private:
 
     bool srcIsBt;
     QThread dbusThread;
-    DBusWorker dbusWorker;
 };
 
 #endif

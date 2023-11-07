@@ -74,6 +74,7 @@ void BluetoothInterface::initVars(){
     deviceList = new QList<BtDevice*>;
     knownDeviceList = new QList<BtDevice*>;
     btScanner = new BtScanner;
+    pPath = new PlayerPath;
 
     devices = new QPushButton("Devices(0)");
     search = new QPushButton("Search");
@@ -189,8 +190,12 @@ void BluetoothInterface::addNewDevices(QString devPath){
 void BluetoothInterface::addConnectedDevice(BtDevice *device){
     scrollAreaLayout->addWidget(device);
     knownDeviceList->append(device);
+
     device->setOnPaired();
     DataStorage::saveBtDevice(device->getName(), device->getAddress());
+
+    pPath->executeMethod(dbus->createDBusPath(device->getAddress()));
+
     emit(this->pairedDeviceUpdate());
 }
 
@@ -218,22 +223,39 @@ void BluetoothInterface::bindDeviceSignals(BtDevice *device){
     });
 
     QObject::connect(device, &BtDevice::removeButtonClicked, bt, [&](const QString &address){
-        btUnpair = new BtUnpair;
-
         removeKnownDevice();
-        createSignal(btUnpair, address);
+        // createSignal(btUnpair, address);
         DataStorage::removeBtDevice(address);
+        
+        QThread removalThread;
+        btUnpair = new BtUnpair;
+        btUnpair->moveToThread(&removalThread);
+
+        QObject::connect(&removalThread, &QThread::started, [&](){
+            btUnpair->executeMethod(dbus->createDBusPath(address));
+        });
+        // removalThread.start();
+
         emit(this->pairedDeviceUpdate());
     });
 
     QObject::connect(BtDeviceListener::getInstance(), &BtDeviceListener::deviceConnected, [&](){
+        qDebug() << "Signal received: deviceConnected() in BluetoothInterface";
         QString address = dbus->parseDBusPath(*dbusPath);
+        qDebug() << "1";
         for(BtDevice *device : *deviceList){
+            qDebug() << "2";
             if(device->getAddress() == address){
+                qDebug() << "3";
                 addConnectedDevice(device);
                 searchLayout->removeWidget(device);
             }
         }
+    });
+
+    QObject::connect(pPath, &PlayerPath::path, [&](QString path){
+        BtDeviceListener *listener = BtDeviceListener::getInstance();
+        listener->addDeviceListener(path);
     });
 
     //QObject::connect(listener, &BtDeviceListener::deviceDisconnected, [&](){

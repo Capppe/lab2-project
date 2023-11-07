@@ -31,6 +31,9 @@ signals:
     void deviceConnected();
     void deviceDisconnected();
     void devicePaired();
+    void playerStatus(QString status);
+    void position(qint64 pos);
+    void track(QVariantMap track);
 };
 
 #endif

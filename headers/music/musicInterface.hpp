@@ -3,8 +3,16 @@
 
 #include <QtWidgets>
 
+#include "../bt/btDeviceListener.hpp"
+#include "../bt/music/status.hpp"
+#include "../bt/btConnectedDevices.hpp"
+#include "../bt/music/btAudioSystem.hpp"
+#include "abstractAudioSystem.hpp"
+#include "localAudioSystem.hpp"
+
 class MusicInterface : public QWidget
 {
+    Q_OBJECT
 public:
     // Constructor & destructor
     MusicInterface();
@@ -39,6 +47,8 @@ private:
     void populateWidgets();
     void styleLayout();
     void populateLayouts();
+    void bindSignals();
+    void getSource();
 
     QWidget *containerWidget;
     QWidget *fileWidget;
@@ -72,6 +82,14 @@ private:
     QStandardItemModel *model;
     QTreeView *treeView;
     QScrollerProperties scrollerProperties;
+
+    BtConnectedDevices connDevs;
+    AbstractAudioSystem *audioSystem;
+
+signals:
+    void playPauseClicked();
+    void nextClicked();
+    void prevClicked();
 };
 
 #endif

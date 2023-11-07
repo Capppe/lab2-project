@@ -59,7 +59,13 @@ void MainWindow::startBackgroundProcesses() {
     listener = BtDeviceListener::getInstance();
     listener->moveToThread(&devListenerThread);
     devListenerThread.start();
-    //QProcess::execute("bt-agent -c NoInputNoOutput");
+
+    QProcess *btAgent = new QProcess;
+    btAgent->moveToThread(&btAgentThread);
+    QObject::connect(&btAgentThread, &QThread::started, [&](){
+        btAgent->execute("bt-agent -c NoInputNoOutput");
+    });
+    btAgentThread.start();
 }
 
 void showMenu() {

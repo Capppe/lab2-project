@@ -2,14 +2,16 @@
 #include "headers/toolBar.hpp"
 #include <QCoreApplication>
 #include "headers/mainWindow.hpp"
-#include "headers/musicInterface.hpp"
+#include "headers/music/musicInterface.hpp"
+#include "headers/bt/music/btAudioSystem.hpp"
 #include "headers/mainMenu.hpp"
-#include "headers/audioSystem.hpp"
+#include "headers/music/audioSystem.hpp"
 #include "headers/bluetoothInterface.hpp"
 #include "headers/appsInterface.hpp"
 #include "headers/navigationInterface.hpp"
 #include "headers/radioInterface.hpp"
 #include "headers/APIhandler.hpp"
+#include "headers/bt/btConnectedDevices.hpp"
 
 ButtonHandler *ButtonHandler::instance = nullptr;
 
@@ -35,10 +37,15 @@ void ButtonHandler::musicButton() {
     MainWindow *mainWindow = MainWindow::getMainWindow();
     if(mainWindow) {
         AudioSystem *as = AudioSystem::getInstance();
-        mainWindow->setCentralWidget(AudioSystem::getMusicInterface());
+        MusicInterface *mIface = AudioSystem::getMusicInterface();
+        BtConnectedDevices connDevs;
+        mainWindow->setCentralWidget(mIface);
         as->updateUi();
         as->bindSignals();
-        ToolBar::setNavMenuTxt("Music");
+
+        connDevs.getConnectedDevices().size() > 0 ? 
+        ToolBar::setNavMenuTxt("Music - Bluetooth") :
+        ToolBar::setNavMenuTxt("Music - Local");
     }
 }
 
@@ -115,8 +122,8 @@ void ButtonHandler::settingsButton() {
 
 // MusicInterface
 void ButtonHandler::playPauseSong() {
-    AudioSystem *audioSystem = AudioSystem::getInstance();
-    audioSystem->playPause();
+    // AudioSystem *audioSystem = AudioSystem::getInstance();
+    // audioSystem->playPause();
 }
 
 void ButtonHandler::browseLocalFiles() {
@@ -125,18 +132,18 @@ void ButtonHandler::browseLocalFiles() {
 }
 
 void ButtonHandler::sliderChanged() {
-    AudioSystem *audioSystem = AudioSystem::getInstance();
-    audioSystem->setPositionByUser();
+    // AudioSystem *audioSystem = AudioSystem::getInstance();
+    // audioSystem->setPositionByUser();
 }
 
 void ButtonHandler::rewind() {
-    AudioSystem::getInstance()->rewindButton();
+    // AudioSystem::getInstance()->rewindButton();
 }
 
 void ButtonHandler::skip() {
-    AudioSystem::getInstance()->skipButton();
+    // AudioSystem::getInstance()->skipButton();
 }
 
 void ButtonHandler::shuffle() {
-    AudioSystem::getInstance()->shuffleButton();
+    // AudioSystem::getInstance()->shuffleButton();
 }

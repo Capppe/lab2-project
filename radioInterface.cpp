@@ -1,5 +1,5 @@
 #include "headers/radioInterface.hpp"
-#include "headers/audioSystem.hpp"
+#include "headers/music/audioSystem.hpp"
 
 RadioInterface::RadioInterface()
 {
@@ -189,8 +189,8 @@ void RadioInterface::bindSignals(CustomButton *button){
 void RadioInterface::bindButtons(){
     AudioSystem *as = AudioSystem::getInstance();
     QObject::connect(stopButton, &QPushButton::clicked, this, [&](){
-        as->stop();
-        npText->setText("");
+        // as->stop();
+        // npText->setText("");
     });
 
     QObject::connect(browseButton, &QPushButton::clicked, [&](){

@@ -29,6 +29,7 @@ private:
 
     BtDeviceListener *listener;
     QThread devListenerThread;
+    QThread btAgentThread;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

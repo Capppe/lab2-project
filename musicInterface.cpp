@@ -1,6 +1,6 @@
-#include "headers/musicInterface.hpp"
+#include "headers/music/musicInterface.hpp"
 #include "headers/buttonHandler.hpp"
-#include "headers/audioSystem.hpp"
+#include "headers/music/audioSystem.hpp"
 #include "headers/utils.hpp"
 
 QLabel *MusicInterface::songName = nullptr;
@@ -18,7 +18,9 @@ MusicInterface::MusicInterface()
     this->populateLayouts();
     this->populateWidgets();
     this->styleLayout();
+    this->getSource();
     this->bindButtons();
+    this->bindSignals();
     qDebug() << "Music created";
 }
 
@@ -31,14 +33,35 @@ MusicInterface::~MusicInterface()
     qDebug() << "Music destroyed";
 }
 
+void MusicInterface::getSource(){
+    QStringList connectedDevices = connDevs.getConnectedDevices();
+    if(connectedDevices.size() > 0){
+        audioSystem = new BtAudioSystem;
+    }else{
+        audioSystem = new LocalAudioSystem;
+    }
+}
+
 void MusicInterface::bindButtons() {
     ButtonHandler *buttonHandler = ButtonHandler::getInstance();
 
-    QObject::connect(this->playPauseSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::playPauseSong);
+    QObject::connect(this->playPauseSong, &QPushButton::clicked, [&](){
+        audioSystem->playPause();
+        emit(playPauseClicked());
+    });
+    
+    QObject::connect(this->nextSong, &QPushButton::clicked, [&](){
+        audioSystem->nextButton();
+        emit(nextClicked());
+    });
+    
+    QObject::connect(this->prevSong, &QPushButton::clicked, [&](){
+        audioSystem->previousButton();
+        emit(prevClicked());
+    });
+    
     QObject::connect(this->localFiles, &QPushButton::clicked, buttonHandler, &ButtonHandler::browseLocalFiles);
     QObject::connect(this->songLengthSlider, &QSlider::sliderReleased, buttonHandler, &ButtonHandler::sliderChanged);
-    QObject::connect(this->nextSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::skip);
-    QObject::connect(this->prevSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::rewind);
     QObject::connect(this->shuffleSong, &QPushButton::clicked, buttonHandler, &ButtonHandler::shuffle);
 }
 // Ui
@@ -168,6 +191,8 @@ void MusicInterface::styleLayout() {
 
     albumImage->setPixmap(QPixmap(QDir::currentPath() + "/icons/cd.png").scaled(250,250,Qt::KeepAspectRatioByExpanding));
 
+    mainLayout->setContentsMargins(40,40,40,40);
+
     treeView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     treeView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     treeView->setRootIsDecorated(false);
@@ -175,6 +200,32 @@ void MusicInterface::styleLayout() {
 
 void MusicInterface::toggleView(){
     stackedWidget->setCurrentIndex(stackedWidget->currentIndex() == 0 ? 1 : 0);
+}
+
+void MusicInterface::bindSignals(){
+    BtDeviceListener *btDevListener = BtDeviceListener::getInstance();
+    if(!btDevListener){
+        qDebug() << "COULD NOT GET BTDEVLISTENER";
+        return;
+    }
+    QObject::connect(btDevListener, &BtDeviceListener::playerStatus, this, [&](QString status){
+        qDebug() << "insiderrrr";
+        if(status == "playing"){
+            setPlayPauseButtonIcon(0);
+        }else if(status == "paused"){
+            setPlayPauseButtonIcon(1);
+        }else{
+            setPlayPauseButtonIcon(1);
+        }
+    });
+
+    QObject::connect(btDevListener, &BtDeviceListener::position, this, updateSongPosition);
+    QObject::connect(btDevListener, &BtDeviceListener::track, this, [&](QVariantMap map){
+        for(const QString &k : map.keys()){
+            qDebug() << "MAP: " << map << "\nKEY: " << k << "VALUE: " << map[k];
+        }
+    });
+    //QObject::connect()
 }
 
 // Getters

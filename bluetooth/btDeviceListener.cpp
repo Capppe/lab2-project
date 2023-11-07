@@ -27,14 +27,18 @@ BtDeviceListener::~BtDeviceListener() {
 
 //Methods
 void BtDeviceListener::addDeviceListener(QString path){
-    QDBusConnection::systemBus().connect(
+    if(QDBusConnection::systemBus().connect(
         "org.bluez",
         path,
         "org.freedesktop.DBus.Properties",
         "PropertiesChanged",
         this,
         SLOT(propertiesChanged(QString, QVariantMap, QStringList))
-    );
+    )){
+        qDebug() << "Added listener on path: " << path;
+    }else{
+        qDebug() << "Failed to add listener on path: " << path;
+    }
 }
 
 // Slots
@@ -63,6 +67,20 @@ void BtDeviceListener::propertiesChanged(const QString &string, QVariantMap map,
                 emit(devicePaired());
             }
         }
+        else if(k == "Status"){
+            qDebug() << "Emitting: " << "playerStatus(" << map[k].toString() << ")";
+            emit(playerStatus(map[k].toString()));
+        }else if(k == "Position"){
+            qDebug() << "Emitting: " << "position(" << map[k].toString() << ")";
+            emit(position(map[k].toInt()));
+        }else if(k == "Track"){
+            qDebug() << "Emitting: " << "track(" << map[k] << ")";
+                qDebug() << "MAP: " << map[k].toMap().keys();
+            for(const QString &v : map[k].toMap().keys()){
+                qDebug() << "MAP: " << map[k].toMap();// << "\nKEY: " << v << "VALUE: " << map[k].toMap()[v];
+            }
+            emit(track(map[k].toMap()));
+        }else if(k == "");
         
     }
 }
